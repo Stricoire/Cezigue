@@ -1,5 +1,5 @@
 "use client";
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useEffect } from 'react';
@@ -26,7 +26,6 @@ export default function FuelMap({ stations, targetLat, targetLon, selectedStatio
 
   // MapContainer de React-Leaflet ne met pas à jour son centre automatiquement
   function ChangeView({ center }: { center: [number, number] }) {
-    const { useMap } = require("react-leaflet");
     const map = useMap();
     useEffect(() => {
        map.setView(center, map.getZoom());
@@ -34,7 +33,6 @@ export default function FuelMap({ stations, targetLat, targetLon, selectedStatio
     return null;
   }
 
-  const themeColorH = type === "ev" ? "bg-blue-500" : "bg-amber-600";
   const themeColor600 = type === "ev" ? "bg-blue-600" : "bg-amber-700";
 
   return (
@@ -57,7 +55,7 @@ export default function FuelMap({ stations, targetLat, targetLon, selectedStatio
                iconAnchor: [12, 12]
              })}
             >
-             <Popup>Votre point d'ancrage Péri-rural</Popup>
+             <Popup>Votre point d&apos;ancrage Péri-rural</Popup>
            </Marker>
         )}
 

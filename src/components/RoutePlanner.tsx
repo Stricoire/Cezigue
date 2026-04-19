@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, MapPin, Car, Train, Clock, ArrowRight, Navigation, ChevronDown, ChevronUp, Users, Bus, Leaf } from "lucide-react";
+import { MapPin, Car, Train, Clock, ArrowRight, Navigation, ChevronDown, Users, Bus, Leaf } from "lucide-react";
 import AutocompleteInput from "./AutocompleteInput";
 import dynamic from "next/dynamic";
 
@@ -89,7 +89,6 @@ export default function RoutePlanner({ initialOrigin = "" }: { initialOrigin?: s
     return true;
   }) : null;
 
-  const currentRoute = filteredRoutes?.find((r: any) => r.id === selectedRouteId);
 
 
   return (
@@ -238,7 +237,7 @@ export default function RoutePlanner({ initialOrigin = "" }: { initialOrigin?: s
              <div className="h-full min-h-[300px] flex items-center justify-center">
                 <div className="text-center text-neutral-400 max-w-xs">
                    <Navigation className="w-12 h-12 mx-auto mb-3 opacity-20" />
-                   <p className="text-sm">Renseignez votre point de départ et d'arrivée pour évaluer le meilleur mode de rabattement.</p>
+                   <p className="text-sm">Renseignez votre point de départ et d&apos;arrivée pour évaluer le meilleur mode de rabattement.</p>
                 </div>
              </div>
            )}
@@ -327,7 +326,7 @@ export default function RoutePlanner({ initialOrigin = "" }: { initialOrigin?: s
 
                       {route.urls && (
                         <div className="mt-4 pt-4 border-t border-neutral-100 flex flex-col gap-2">
-                           <p className="text-xs font-bold text-neutral-500 uppercase tracking-wider mb-1">Passer à l'action :</p>
+                           <p className="text-xs font-bold text-neutral-500 uppercase tracking-wider mb-1">Passer à l&apos;action :</p>
                            {route.urls.map((u: any, idx: number) => (
                               <a key={idx} href={u.url} target="_blank" rel="noreferrer" className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-white font-bold text-sm transition-opacity hover:opacity-90 ${u.color === 'blue' ? 'bg-[#00AFF5]' : 'bg-teal-600'}`}>
                                  Voir sur {u.name} <ArrowRight className="w-4 h-4" />

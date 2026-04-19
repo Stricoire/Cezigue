@@ -63,7 +63,8 @@ export async function GET(request: Request) {
 
     // Polylines Google Maps (décodage pour le Transit)
     const decodePolyline = (t: string, e = 5) => {
-        let index = 0, lat = 0, lng = 0, coordinates = [];
+        let index = 0, lat = 0, lng = 0;
+        const coordinates = [];
         while (index < t.length) {
             let b, shift = 0, result = 0;
             do {
@@ -71,7 +72,7 @@ export async function GET(request: Request) {
                 result |= (b & 0x1f) << shift;
                 shift += 5;
             } while (b >= 0x20);
-            let dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
+            const dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
             lat += dlat;
             shift = 0;
             result = 0;
@@ -80,7 +81,7 @@ export async function GET(request: Request) {
                 result |= (b & 0x1f) << shift;
                 shift += 5;
             } while (b >= 0x20);
-            let dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
+            const dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
             lng += dlng;
             coordinates.push([lat / Math.pow(10, e), lng / Math.pow(10, e)]);
         }
@@ -240,8 +241,8 @@ export async function GET(request: Request) {
        }
 
        // Est-ce identique à la route HERE Short ?
-       let sectShort = hereDataShort?.routes?.[0]?.sections?.[0];
-       let distShort = sectShort ? sectShort.summary.length / 1000 : 0;
+       const sectShort = hereDataShort?.routes?.[0]?.sections?.[0];
+       const distShort = sectShort ? sectShort.summary.length / 1000 : 0;
        if (sectShort && distShort >= distanceKmAlt * 0.95 && distShort <= distanceKmAlt * 1.05) {
            altMerged = true;
        }
@@ -277,7 +278,7 @@ export async function GET(request: Request) {
             const durationMinShort = Math.round(sectShort.summary.duration / 60);
             const tollCostShort = getTollSum(sectShort);
             
-            let ecoFactor = 0.85; 
+            const ecoFactor = 0.85; 
             const fuelNeededShort = (distanceKmShort * (consoPer100 * ecoFactor)) / 100;
             const fuelCostShort = fuelNeededShort * pricePerUnit;
             

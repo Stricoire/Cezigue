@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowUp, Plus, Box, Cpu, ShieldCheck, Zap, MapPin } from "lucide-react";
+import { ArrowUp, Plus, Box, Cpu, Zap, MapPin } from "lucide-react";
 import Link from "next/link";
 import PublicNewsWidget from "@/components/public-news-widget";
 

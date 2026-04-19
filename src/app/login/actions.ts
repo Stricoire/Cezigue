@@ -47,7 +47,11 @@ export async function signInWithProvider(provider: 'google' | 'apple') {
     },
   })
 
-  if (data.url) {
+  if (error) {
+    redirect('/login?error=true')
+  }
+
+  if (data?.url) {
     redirect(data.url)
   }
 }

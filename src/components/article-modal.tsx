@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Lightbulb, Info, X } from "lucide-react";
-import Link from "next/link";
 
 export default function ArticleInsightModal({ insightText, articleId, premium = false }: { insightText: string; articleId?: string; premium?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +21,7 @@ export default function ArticleInsightModal({ insightText, articleId, premium = 
         <Lightbulb className="w-5 h-5 text-primary shrink-0 group-hover/modal:animate-pulse" />
         <div className="flex-1">
           <span className={`text-[9px] block mb-1 uppercase tracking-widest ${premium ? 'text-purple-600 font-black' : 'text-secondary'}`}>
-            L'idée de Marina {premium && <span className="bg-purple-100 px-1 py-[1px] rounded ml-1">Pro</span>}
+            L&apos;idée de Marina {premium && <span className="bg-purple-100 px-1 py-[1px] rounded ml-1">Pro</span>}
           </span>
           <p className="text-xs font-bold text-foreground leading-relaxed">
             {resume}

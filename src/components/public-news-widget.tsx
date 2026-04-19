@@ -26,7 +26,8 @@ export default async function PublicNewsWidget({ region = "Toutes" }: { region?:
 
   let articles = rawArticles || [];
   if (region === "Toutes" && articles.length > 0) {
-    articles = articles.sort(() => Math.random() - 0.5).slice(0, 4);
+    // Determine sort based on ID to avoid Math.random() impurity in React render
+    articles = articles.sort((a, b) => a.id.localeCompare(b.id)).slice(0, 4);
   }
 
   if (error || !articles || articles.length === 0) return null;
@@ -53,7 +54,7 @@ export default async function PublicNewsWidget({ region = "Toutes" }: { region?:
               <h4 className="text-sm font-bold text-foreground leading-snug hover:text-primary transition-colors line-clamp-2">
                 {article.titre}
               </h4>
-              <a href={article.source_url} target="_blank" rel="noopener noreferrer" className="text-[10px] text-muted-foreground hover:underline w-fit mt-1">Lire l'article source ↗</a>
+              <a href={article.source_url} target="_blank" rel="noopener noreferrer" className="text-[10px] text-muted-foreground hover:underline w-fit mt-1">Lire l&apos;article source ↗</a>
             </div>
             {article.marlowe_insight || article.marlowe_insight_premium ? (
               <div className="mt-1">

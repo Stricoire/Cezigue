@@ -34,7 +34,7 @@ export default async function RadarPage({ searchParams }: { searchParams: Promis
   let articles = rawArticles || [];
   if (region === "Toutes" && articles.length > 0) {
     // Petit mix: On mélange (Shuffle) pour ne pas être dominé par une région si on a un biais temporel RSS
-    articles = articles.sort(() => Math.random() - 0.5).slice(0, 48);
+    articles = articles.sort((a, b) => a.id.localeCompare(b.id)).slice(0, 48);
   }
 
   return (
@@ -53,7 +53,7 @@ export default async function RadarPage({ searchParams }: { searchParams: Promis
           <div className="flex flex-col gap-4">
             <Link href="/">
               <Button variant="ghost" size="sm" className="w-fit text-muted-foreground hover:text-foreground">
-                <ArrowLeft className="w-4 h-4 mr-2" /> Retour au site d'accueil
+                <ArrowLeft className="w-4 h-4 mr-2" /> Retour au site d&apos;accueil
               </Button>
             </Link>
 
@@ -66,7 +66,7 @@ export default async function RadarPage({ searchParams }: { searchParams: Promis
               </h1>
             </div>
             <p className="text-xl text-muted-foreground max-w-2xl mt-2 font-medium">
-              Alerte en temps réel sur l'actualité de la Mobilité, des Territoires Ruraux et des innovations sectorielles.
+              Alerte en temps réel sur l&apos;actualité de la Mobilité, des Territoires Ruraux et des innovations sectorielles.
             </p>
           </div>
 
@@ -84,14 +84,14 @@ export default async function RadarPage({ searchParams }: { searchParams: Promis
         {/* Composant de ciblage régional */}
         <RegionSelector />
 
-        {/* Grille d'articles */}
+        {/* Grille d&apos;articles */}
         {error ? (
           <div className="p-8 text-center bg-red-500/10 text-red-500 rounded-xl border border-red-500/30">
-            Une erreur de communication radar s'est produite. Impossible de récupérer le flux.
+            Une erreur de communication radar s&apos;est produite. Impossible de récupérer le flux.
           </div>
         ) : !articles || articles.length === 0 ? (
           <div className="p-16 text-center bg-card border border-muted-foreground/20 text-muted-foreground rounded-2xl">
-            Aucun article n'a été détecté par nos radars pour le moment.
+            Aucun article n&apos;a été détecté par nos radars pour le moment.
           </div>
         ) : (
           <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
@@ -138,7 +138,7 @@ export default async function RadarPage({ searchParams }: { searchParams: Promis
                 </p>
 
                 <div className="flex items-center gap-2 mt-6 text-xs font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                  Lire l'analyse complète <ExternalLink className="w-3 h-3" />
+                  Lire l&apos;analyse complète <ExternalLink className="w-3 h-3" />
                 </div>
               </a>
             ))}

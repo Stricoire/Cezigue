@@ -86,7 +86,7 @@ export async function GET(request: Request) {
         }
       });
 
-      let stations = Array.from(uniqueMap.values());
+      const stations = Array.from(uniqueMap.values());
       stations.sort((a: any, b: any) => a.distance - b.distance);
 
       return NextResponse.json({ stations });
@@ -163,7 +163,7 @@ export async function GET(request: Request) {
       }
     });
 
-    let stations = Array.from(uniqueMap.values());
+    const stations = Array.from(uniqueMap.values());
     
     // Tri par distance croissante (du plus proche au plus lointain)
     stations.sort((a: any, b: any) => a.distance - b.distance);

@@ -16,7 +16,7 @@ export default function PitchForm({ insight }: { insight: string }) {
         </div>
         <h4 className="font-black text-xl">Dossier transmis !</h4>
         <p className="text-sm opacity-80 max-w-sm">
-          L'équipe Cezigue Incubator étudie actuellement votre demande. Nous vous recontacterons très vite pour en discuter de vive voix.
+          L&apos;équipe Cezigue Incubator étudie actuellement votre demande. Nous vous recontacterons très vite pour en discuter de vive voix.
         </p>
       </div>
     );
@@ -66,7 +66,7 @@ export default function PitchForm({ insight }: { insight: string }) {
         disabled={isSubmitting} 
         className="w-full mt-4 flex items-center justify-center gap-2 py-4 bg-primary text-primary-foreground font-black text-sm uppercase tracking-widest rounded-xl hover:bg-primary/90 transition-all active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100"
       >
-        {isSubmitting ? "Envoi du dossier..." : <><Send className="w-4 h-4" /> Envoyer à l'incubateur</>}
+        {isSubmitting ? "Envoi du dossier..." : <><Send className="w-4 h-4" /> Envoyer à l&apos;incubateur</>}
       </button>
     </form>
   );

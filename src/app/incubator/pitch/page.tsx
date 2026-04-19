@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
-import { Lightbulb, Building2, Calendar, Target, ArrowLeft } from "lucide-react";
+import { Building2, Target, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import PitchForm from "./pitch-form";
 
@@ -40,7 +40,7 @@ export default async function PitchPage({ searchParams }: { searchParams: { id?:
 
       <div className="container mx-auto max-w-5xl px-4 py-12 relative z-10">
         <Link href="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8 text-sm font-medium">
-          <ArrowLeft className="w-4 h-4" /> Retour à l'accueil
+          <ArrowLeft className="w-4 h-4" /> Retour à l&apos;accueil
         </Link>
         
         <div className="mb-12">
@@ -62,7 +62,7 @@ export default async function PitchPage({ searchParams }: { searchParams: { id?:
             <div className="bg-card border border-muted-foreground/10 rounded-2xl p-8 shadow-xl">
                <h3 className="font-bold text-foreground text-lg mb-2 flex items-center gap-2">
                  <Target className="w-5 h-5 text-secondary" />
-                 L'opportunité identifiée
+                 L&apos;opportunité identifiée
                </h3>
                <p className="text-sm text-muted-foreground mb-6">
                  Basé sur le signal de la veille : <i>{article.titre}</i>
@@ -80,10 +80,10 @@ export default async function PitchPage({ searchParams }: { searchParams: { id?:
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full pointer-events-none" />
             
             <h3 className="text-2xl font-black text-foreground mb-2 relative z-10">
-              Passer à l'action
+              Passer à l&apos;action
             </h3>
             <p className="text-muted-foreground text-sm mb-8 relative z-10">
-              Parlons de cette opportunité. Remplissez ce dossier et l'équipe Cezigue vous recontactera rapidement.
+              Parlons de cette opportunité. Remplissez ce dossier et l&apos;équipe Cezigue vous recontactera rapidement.
             </p>
 
             <PitchForm insight={marche} />

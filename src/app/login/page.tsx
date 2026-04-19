@@ -72,7 +72,7 @@ export default function LoginPage({
             />
           </div>
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-bold text-foreground">Code d'accès (Mot de passe)</label>
+            <label className="text-sm font-bold text-foreground">Code d&apos;accès (Mot de passe)</label>
             <Input 
               name="password" 
               type="password" 

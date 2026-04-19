@@ -38,7 +38,7 @@ export default function ServicesPage() {
     <main className="flex min-h-screen flex-col items-center p-8 bg-neutral-50 dark:bg-background">
       <div className="w-full max-w-7xl mb-8 flex items-center justify-between">
          <Link href="/" className="flex items-center text-sm font-medium text-muted-foreground hover:text-foreground">
-           <ArrowLeft className="w-4 h-4 mr-2" /> Retour à l'accueil
+           <ArrowLeft className="w-4 h-4 mr-2" /> Retour à l&apos;accueil
          </Link>
          <h1 className="text-2xl font-bold tracking-tight">Mobilité Péri-rurale</h1>
       </div>
