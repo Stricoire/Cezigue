@@ -252,7 +252,7 @@ export default function FuelRadar({ lat, lon, maximized = false }: { lat?: numbe
                       <Tooltip 
                         contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)', fontSize: '12px', fontWeight: 600 }}
                         itemStyle={{ padding: 0 }}
-                        formatter={(value: any, name: string) => [value ? `${Number(value).toFixed(3)}${energyType === 'ev' ? '€/kWh' : '€'}` : '', name]}
+                        formatter={(value: any, name: any) => [value ? `${Number(value).toFixed(3)}${energyType === 'ev' ? '€/kWh' : '€'}` : '', name]}
                       />
                       <Legend iconType="circle" wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
                       
