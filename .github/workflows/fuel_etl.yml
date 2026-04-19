@@ -1,0 +1,33 @@
+name: Fuel Data ETL (Supabase History Archive)
+
+on:
+  schedule:
+    # Exécution tous les jours à 04:00 AM (Heure UTC, soit 5h/6h en France)
+    - cron: '0 4 * * *'
+  
+  # Permet également de lancer le script manuellement depuis GitHub
+  workflow_dispatch:
+
+jobs:
+  run-etl:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          # On installe ts-node globalement pour exécuter le script
+          npm install -g ts-node typescript @supabase/supabase-js
+
+      - name: Run ETL Script
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: ts-node scripts/etl_history.ts
