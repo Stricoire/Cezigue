@@ -4,13 +4,13 @@ import { Building2, Target, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import PitchForm from "./pitch-form";
 
-// Initialisation de Supabase (Server-side uniquement)
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
 export default async function PitchPage({ searchParams }: { searchParams: { id?: string } }) {
+  // Initialisation de Supabase (Server-side uniquement)
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
   const { id } = await searchParams;
 
   if (!id) {

@@ -6,12 +6,12 @@ import SearchBar from "@/components/search-bar";
 
 export const dynamic = 'force-dynamic'; // Bypass Next.js cache en Dev
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
 export default async function NewsPage({ searchParams }: { searchParams: Promise<{ region?: string, q?: string }> }) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
   const params = await searchParams;
   const region = params.region || "Toutes";
   const searchText = params.q;
