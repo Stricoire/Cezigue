@@ -26,6 +26,7 @@ interface POI {
   postcode?: string;
   score?: number;
   commentsCount?: number;
+  categories?: string[];
 }
 
 const CATEGORIES_DISPONIBLES = ['Commerce', 'Santé', 'Service', 'Événement Culturel', 'Activité Touristique', 'Activité Sportive', 'Randonnée & Vélo'];
