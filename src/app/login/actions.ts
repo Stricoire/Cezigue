@@ -18,7 +18,7 @@ export async function login(formData: FormData) {
   }
 
   revalidatePath('/', 'layout')
-  redirect('/admin')
+  redirect('/services')
 }
 
 export async function signup(formData: FormData) {
@@ -35,7 +35,7 @@ export async function signup(formData: FormData) {
   }
 
   revalidatePath('/', 'layout')
-  redirect('/admin')
+  redirect('/services')
 }
 
 export async function signInWithProvider(provider: 'google' | 'apple') {
@@ -43,7 +43,7 @@ export async function signInWithProvider(provider: 'google' | 'apple') {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: provider,
     options: {
-      redirectTo: 'http://localhost:3001/auth/callback', 
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback`, 
     },
   })
 

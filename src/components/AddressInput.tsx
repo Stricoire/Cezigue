@@ -68,6 +68,9 @@ export default function AddressInput({ onLocationFound }: { onLocationFound?: (d
            address: feature.properties.label,
            insee: echographieData
          });
+      } else {
+         // Comportement par défaut (Page d'accueil) : on redirige vers le Hub
+         window.location.href = `/services?lat=${lat}&lon=${lon}&address=${encodeURIComponent(feature.properties.label)}`;
       }
     } catch (e) {
       console.error("Erreur serveur geocode:", e);

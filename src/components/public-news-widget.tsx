@@ -33,13 +33,13 @@ export default async function PublicNewsWidget({ region = "Toutes" }: { region?:
   if (error || !articles || articles.length === 0) return null;
 
   return (
-    <div className="absolute right-0 top-32 w-80 bg-card border-y border-l border-muted-foreground/20 rounded-l-2xl shadow-2xl overflow-hidden hidden lg:flex flex-col z-20">
-      <Link href="/radar" className="p-4 bg-primary/5 hover:bg-primary/10 transition-colors border-b border-muted-foreground/10 flex items-center justify-between group">
+    <div className="flex-1 w-full bg-white/40 dark:bg-black/30 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-3xl shadow-xl overflow-hidden flex flex-col z-20">
+      <Link href="/radar" className="p-4 bg-primary/5 hover:bg-primary/20 transition-colors border-b border-black/5 dark:border-white/5 flex items-center justify-between group">
         <div className="flex items-center gap-2">
-          <Zap className="w-4 h-4 text-primary shrink-0" />
-          <span className="font-bold text-xs uppercase tracking-widest text-primary truncate">Radar Intelligence</span>
+          <Zap className="w-5 h-5 text-primary shrink-0 group-hover:scale-110 transition-transform" />
+          <span className="font-black text-xs uppercase tracking-widest text-primary truncate">Le Radar Intelligence</span>
         </div>
-        <ArrowRight className="w-4 h-4 text-primary opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all shrink-0" />
+        <ArrowRight className="w-4 h-4 text-primary opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all shrink-0" />
       </Link>
 
       <div className="px-4 py-2 bg-background border-b border-muted-foreground/10">

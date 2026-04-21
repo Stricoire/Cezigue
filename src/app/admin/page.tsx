@@ -3,6 +3,8 @@ import { FileText, ExternalLink, Lightbulb, Users, Phone, Calendar } from "lucid
 import RegionSelector from "@/components/region-selector";
 import ArticleInsightModal from "@/components/article-modal";
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminDashboard({ searchParams }: { searchParams: Promise<{ region?: string }> }) {
   const supabase = await createClient()
 

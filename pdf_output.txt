@@ -1,0 +1,485 @@
+Mobility Portfolio
+La plateforme  de 
+déploiement  d’apps  qui 
+redonne  le contrôle  aux 
+acteurs  locaux
+Nos applications en marque blanche vous offrent  une visibilité  
+totale , réduisent  les risques  et vous font économiser  des 
+milliers  d’euros  par an — sans investissements  lourds , sans 
+logiciels  complexes, sans déploiements  interminables .
+
+--- PAGE BREAK ---
+Cezigue Mobility 
+Portfolio
+L’industrie  
+européenne  de 
+la flotte  évolue  
+plus vite  que  
+jamais
+NextChiffres clés  2025
+60%des flottes  de PME utilisent  encore des tableurs  pour leurs  
+opérations  quotidiennes .
+12 000 €/year coût  moyen par véhicule de flotte .
+1 sur 3gestionnaires  de flotte  prévoient  de se digitaliser  avant 2026
+40% des nouveaux véhicules  d’entreprise  sont  déjà électrifiés .
+Source:
+•Berg Insight (2025); Fleet Europe (2024); Deloitte (2024); McKinsey & Co. (2025)
+--- PAGE BREAK ---
+Cezigue Mobility 
+Portfolio
+Qu’est -ce qui freine  votre  flotte  aujourd’hui  ?
+NextSource:
+•Source s: Fleet Europe (2024); Geotab (2024); Frost & Sullivan (2024); Qmerit  (2025)Problème Coût  réel Pourquoi  cela  arrive
+Immobilisation des véhicules 450–700 € / jour / véhiculeMaintenance réactive  et absence de diagnostics 
+en temps réel
+Surconsommation  de carburant +10–15 % de coût  supplémentaireManque de retours de conduite  et faible  visibilité  
+des trajets
+Accidents & assurances 15 000 € en moyenne  par sinistre Absence de système  de suivi  du conducteur
+Chaos énergétique  & recharge 30 % d’efficacité  perdue Bornes et données non connectées
+Administration manuelle 20 % du temps perdu chaque  semaine Processus basés  sur le papier ou des fichiers  Excel
+--- PAGE BREAK ---
+5 applications modulaires  — 
+un écosystème  connectéNouNou
+ Majordome Roulotte
+ MirePOI
+ DriveAssist
+Mobility Portfolio
+
+--- PAGE BREAK ---
+Contrôle  de flotte  en temps réelNouNou
+
+--- PAGE BREAK ---
+NouNou
+NextProblématique  Résolu
+•Suivi  manuel  et données dispersées
+•Immobilisation imprévue  = retards
+•Charge administrative élevée
+•Difficulté  à prouver  la conformité  ESG / 
+CSRDContrôle  de flotte  en temps réel
+Impact Business
+d’immobilisation-25%
+de consommation  
+carburant-15%
+de temps 
+administratif-20%
+(Geotab, 2024; Berg Insight, 2025; Eurelectric  2024)Fonctionnalités  clés
+Tableau de bord temps réel (localisation, 
+statut , batterie, maintenance)
+Analyse de trajets  et parcours
+Alertes  maintenance + suivi  des coûts
+KPIs back -office pour contrôle  budgétaire
+Éco-score (0 –100)  pour mesurer  l’impact  
+environnemental
+Tarifs
+•Setup:  €5 000 (white -label app)
+•Abonnement : à partir  de 15 €/véhicule/ mois
+•Matériel : 75–200 €  par dongle
+•Déploiement  : ≈ 1 semaine
+de précision  dans les 
+rapports ESG+20 %
+
+--- PAGE BREAK ---
+Tableau de bord 
+temps réel (localisation , 
+statut , batterie, 
+maintenance)NouNou
+Gestion des trajets  et des 
+itinéraires  :
+visualisez  les trajets  passés , 
+la distance, la durée et la 
+consommation  d’énergie .Panneau  d’état du véhicule :
+Toutes  les données de votre  
+véhicule regroupées  au même  
+endroit
+Panneau  d’informations  du véhicule :
+VIN, plaque d’immatriculation , historiques  
+de maintenance
+F o n c t i o n n a l i t é sFonctionnalités
+
+--- PAGE BREAK ---
+NouNou
+KPIs de la flotte
+Suivi  des indicateurs  clés : 
+coût , distance, temps et 
+éco-score par véhicule
+Calendrier  de réservation  
+des véhicules
+Gérez  les réservations  avec un 
+agenda visuel  hebdomadairePanneau  de synthèse  de la flotte
+Vue centrale des véhicules , des 
+utilisateurs , de l’éco -score, de l’usage  
+et des coûts
+Cezigue Mobility F o n c t i o n n a l i t é sFonctionnalités
+Statut  du véhicule en direct
+Aperçu en temps réel de la 
+vitesse , des portes  et de 
+l’état  du moteurSuivi  cartographique  en temps réel
+Localisez  instantanément  les 
+véhicules  actifs  sur la carte via GPSHistorique  des trajets  & 
+suivi  des parcours
+Consultez  les trajets  
+terminés  avec localisation , 
+distance, durée et 
+itinéraire
+--- PAGE BREAK ---
+Sécurité  & Éco -ConduiteDriveAssist
+
+--- PAGE BREAK ---
+NextProblématique  Résolu
+•Taux  d’accidents  élevé  + primes 
+d’assurance
+•Aucun  suivi  du comportement  de 
+conduite
+•Surconsommation  due aux mauvaises  
+pratiques (+10 –20 %)
+driving).Sécurité  & Éco -
+Conduite
+Impact Business
+d’accidents-27 %
+sur les primes-8 %
+de carburant 
+économisé12 %
+(Frost & Sullivan, 2024; Samsara, 2023)Fonctionnalités  clés
+Feedback en temps réel dans le 
+véhicule
+Alertes  configurables  (météo , charge, 
+route)
+Tableau de bord du conducteur  : 
+scores & KPIs
+TarifsDriveAssist
+•Setup : 7 000 €
+•Frais data : 3 cts / kW consommé
+•Déploiement  : ≈ 1 semaine
+--- PAGE BREAK ---
+Paramètres  dynamiques : 
+météo , charge, type de routeFeedback conducteur  :
+vitesse , freinage , trajectoire
+Règles  configurables  : 
+seuils , alertes , comportements
+FeaturesFeatures DriveAssist
+
+--- PAGE BREAK ---
+MirePOI
+Accès  & Infra recharge VE
+
+--- PAGE BREAK ---
+MirePOI
+NextProblématique  Résolu
+•Accès  fragmenté  aux bornes  (cartes , 
+comptes  multiples)
+•Perte de temps pour trouver  une borne 
+disponible
+•Facturation  incohérente
+•Manque de visibilité  sur les sessions & 
+anomaliesAccès  & Infra recharge VE
+Impact Business
+de réduction  des 
+coûts  énergétiques20–30 %
+d’utilisation  des 
+bornes  de recharge+30 % 
+(Ctek 2024; Qmerit 2025)Fonctionnalités  clés
+Carte d’accès digitale (QR/NFC)
+Carte interactive avec disponibilité 
+des bornes
+Intégration facturation + CRM
+Gestion des abonnements & 
+consommation
+Tarifs
+d’économie  
+d’énergie–15–25% 
+ •Setup : 7 000 €
+•Frais data : 3 cts / kW
+•Déploiement : ≈ 1 semaine
+--- PAGE BREAK ---
+Carte d’accès  digitale
+Carte virtuelle  NFC ou QR 
+remplaçant  les clés physiques 
+pour un accès  fluide  aux 
+infrastructures sur site
+Code d’accès  manuel
+Accès  de secours via un code 
+numérique si la carte digitale  
+n’est  pas prise  en chargeCarte interactive + 
+Navigation
+Vos données essentielles  et la 
+position du véhicule en temps 
+réel
+Menu complet  du compte
+Gérez  vos informations  
+personnelles , véhicules , 
+abonnements, paramètres  et 
+support au même  endroit
+FonctionnalitésFonctionnalitésMirePOI
+
+--- PAGE BREAK ---
+Flottes partagées  & coopérativesRoulotte
+
+--- PAGE BREAK ---
+Roulotte
+NextProblématique  Résolu
+•Aucun  outil  pour gérer  une flotte  
+multi -utilisateurs
+•Réservations  manuelles , faible  taux  
+d’utilisation  (<60 %)
+•Coût  administratif  élevéFlottes partagées  & 
+coopératives
+Impact Business
+d’utilisation  des 
+véhicules+40 %
+de temps 
+administratif–25 %
+(Interreg 2024; Som Mobilitat 2023)Fonctionnalités  clés
+Calendrier + carte des réservations
+Accès digital au véhicule
+Historique de trajets + autonomie
+Gestion utilisateur + facturation
+Tarifs
+•Setup : 7 500 €
+•Abonnement : TBD
+•Matériel : 75–200 €
+•Frais transactionnels : TBD
+•Déploiement : ≈ 1 semaine
+
+--- PAGE BREAK ---
+Accueil  – Carte des 
+véhicules  & Réservation  :
+Vue cartographique  avec les 
+voitures disponibles  et les points 
+d’intérêt  à proximité .Roulotte
+Contrôle  du véhicule :
+Gérez  votre  trajet  en cours .
+Ouvrir , Mettre  en pause, Terminer 
+le trajet
+Affichage  du statut  du véhicule et 
+de l’autonomie
+Calendrier  de réservation  :
+Réservez  un véhicule par date et 
+heure  
+Mes trajets  :
+Consultez  l’historique  de vos trajets  
+en un coup d’œil .
+• Date, heure , distance, tarif
+• Trié de façon chronologique
+FonctionnalitésFonctionnalités
+--- PAGE BREAK ---
+Majordome
+Dispatch & Opérations  à la demande
+--- PAGE BREAK ---
+Dispatch & Opérations  à 
+la demande
+ Majordome
+NextProblématique  Résolu
+•Communication fragmentée  entre 
+chauffeurs & clients
+•Perte de temps dans la coordination 
+des courses
+•Kilométrage  à vide élevé  (–15 % 
+d’efficacité )
+Impact Business
+de kilomètres  à 
+vide–15 %
+de temps de 
+coordination–35 %
+(Fleet Europe 2024; Frost & Sullivan 2023)Fonctionnalités  clés
+Double app (chauffeur + client)
+Carte temps réel & ETA
+Dispatch et tarification  automatiques
+Chat intégré  + historique
+Tarif
+•Setup : 10 500 € (white -label app)
+•Abonnement: TBD
+•Frais : TBD
+•Déploiement  : ≈ 1 semaine
+
+--- PAGE BREAK ---
+Écran  d’accueil  – 
+Réservation  de course :
+Définissez  facilement  les points 
+de départ  et d’arrivée  sur la 
+carte.
+Vue chauffeur :
+Les chauffeurs reçoivent  
+instantanément  les détails  de la 
+course.
+• Adresse  de départ  et d’arrivée
+• Distance, durée, prix, et plus 
+encore…
+Vue client :
+Sélection  et réservation  de la 
+course.
+Choisissez  parmi  les 
+chauffeurs disponibles  avec 
+estimation du prix et du 
+temps.
+Vue course en cours  :
+Carte en direct et résumé du trajet  
+pendant la course.
+• Affichage  de l’itinéraire
+• Distance, durée et ETA
+• « Terminer la course » et 
+envoyer  le reçuChat intégré  :
+Communication en temps réel 
+entre chauffeur et passager .
+Majordome
+FonctionnalitésFonctionnalités
+--- PAGE BREAK ---
+Transformer vos  difficultés  en croissanceNos services
+--- PAGE BREAK ---
+Opérations  intelligentes . 
+Impact réel .Consulting
+NextProblématique  Résolu
+•Outils digitaux déconnectés
+•Manque d’expertise pour passer à l’électrique
+•Processus manuels ou obsolètes
+•Pas de feuille de route claire
+Impact Business
+•Opérations  fluides  et connectées
+•Fin du temps perdu et des doublons
+•Autonomie  interne renforcée
+•Transition VE rapide  & rentable
+•Data transformée  en performance mesurableOffre
+•Audit digital & feuille de route
+•Plan d’électrification & déploiement
+•Intégration système & data flows
+•Optimisation opérationnelle
+•Acculturation aux outils mobilité
+•Conseil tech & développement
+•Stratégie multi -sites
+•Transfert de connaissances
+Pricing
+•Setup: 
+•Subscription: 
+•Deployment: 
+--- PAGE BREAK ---
+Montez en compétence . 
+Gagnez  en autonomie .Training
+NextProblématique  Résolu
+•Dépendance  excessive aux prestataires
+•Faible  adoption des outils  digitaux
+•Manque de maîtrise  au quotidien
+Impact Business
+•Équipes confiantes  et autonomes
+•Zéro  interruption due à une mauvaise  utilisation
+•Plus d’efficacité  au quotidien
+•ROI accéléré  grâce à la montée en compétenceOffre
+•Formation admin : dashboards & réglages
+•Formation gestionnaire : installation gestion 
+dongles
+•Ateliers utilisateurs
+•Manuels & guides
+•Programme de montée en autonomie
+Pricing
+•Setup: 
+•Subscription: 
+•Deployment: 
+--- PAGE BREAK ---
+Cezigue Mobility 
+Portfolio
+Des résultats  en mois , pas en années .
+NextIndicateurDéfinition  & référence  “Avant 
+Cezigue ”Amélioration  appliquée  
+(“Après Cezigue ”)Impact business
+Coût  annuel  par véhiculeCoût  annuel  moyen par véhicule (carburant, 
+maintenance, assurance, administratif ).
+Moyenne européenne : 11 800 –12 300 €.Réduction  de coûts  de 20–22 % → 9 
+500–9 800 €.Les flottes  digitalisées  réduisent  leurs  coûts  opérationnels  totaux  de 15–
+25 % grâce à la maintenance prédictive , à l’optimisation  des trajets  et à 
+la baisse  du temps administratif . Sources:  Deloitte (2024). Fleet 
+Management Outlook Europe ; Berg Insight (2024). European Fleet 
+Management Market 2024.
+Immobilisation des 
+véhicules  (Downtime)En moyenne  8–9 jours  d’indisponibilité  par 
+véhicule et par an,
+équivalant  à 450–700 € perdus par jour .Réduction  de 30–32 % → ≈ 6 jours  
+perdus par an.La maintenance prédictive  et les diagnostics en temps réel réduisent  
+l’immobilisation  de 25–35 %  dans les flottes  connectées . Sources:  Fleet 
+Europe (2024). Vehicle Downtime Impact Report ; Geotab (2024). 
+Connected Fleet Report Europe.
+Consommation  de 
+carburantLe carburant représente  30–50 %  de l’OPEX  
+d’une  flotte .
+Baseline = 100 % .Réduction  de 10–15 % → 87 %  du 
+niveau  initial.Les programmes d’éco -conduite  et l’optimisation  des trajets  permettent  
+généralement  de réduire  la consommation  de 10–15 % . Sources:  
+Geotab (2024). Connected Fleet Report Europe ; Frost & Sullivan (2024). 
+Fleet Safety & Telematics Study.
+Heures  administratives  par 
+semaineLes gestionnaires  de flotte  passent  8–10 
+heures /semaine  sur des tâches  administratives  
+manuelles
+(Excel, rapports, suivi  des factures).Réduction  de 18–22 % → ≈ 8 
+heures /semaine .L’automatisation  des rapports et tableaux de bord réduit  la charge 
+administrative de 15–25 % . Sources:  Fleet Europe (2024). European 
+Fleet Digitalization Barometer ; Arval Mobility Observatory (2024). Fleet 
+Barometer 2024.
+--- PAGE BREAK ---
+Cezigue Mobility 
+Portfolio
+Pourquoi  Cezigue  devient  leur  choix évident
+NextSources (2023 –2025):
+ Berg Insight, Fleet Telematics Europe 2025 Report (2025) ·
+ Geotab Europe, Fleet Operational Efficiency Report (2024) ·
+ Franklin Grid, How Much Are EV Charger Outages Costing You? (2024) ·
+ Arval Mobility Observatory, Fleet Barometer Europe (2024) ·
+ Frost & Sullivan, European Fleet Management Outlook (2023)Indicateur Développement traditionnelApplication Cezigue  en 
+white -labelGain / Impact
+Time -to-Market 12–18 mois 1 semaine > 95 % de déploiement  plus rapide
+Investissement initial 150 000 – 500 000 € 5 000 – 10 000 € – 98 % de CAPEX
+Barrière à l’adoption Élevée  (intégration  IT) Faible  (API prête  à l’emploi ) Scalabilité  instantanée
+Délai  de ROI 18–24 mois 3–6 mois Retour sur investissement  accéléré
+Coûts  O&M / an 10 000 €+ / véhicule 2 000 – 3 000 € – 70 % d’économies
+--- PAGE BREAK ---
+NextAperçu des Plans Tarifaires
+Modèle  CAPEX — Mise en place unique + Abonnement mensuel
+Livrable Description Prix Unitaire  (€)
+Nounou App Application de gestion de flotte  (white -label) €5,000
+MirePOI  App Application de gestion de recharge et ravitaillement  EV €5,000
+Fonctionnalité  personnalisée Fonctionnalité  additionnelle  dans l’app  ou le Back -Office €3,000
+Back -Office propriétaire + Back -End Back -Office propriétaire + Back -End €20,000
+Dongles CAPEX Appareils  matériels  (par unité ) €85 / unit
+Formation 1 session (demi -journée ) €1,000
+Intégration  de dongles existants Intégration  des appareils  déjà utilisés  par le client Free
+Audit de transition EVAudit de 10 jours  + accompagnement  à la stratégie  
+d’électrification€10,000
+Livrable Description Prix Unitaire  (€)
+Abonnement à l’application Par véhicule, incluant  l’accès  au Back -Office 20 € / véhicule / mois
+
+--- PAGE BREAK ---
+NextModèle  OPEX — Mise en place unique + Abonnement mensuel
+Livrable Description Prix Unitaire  (€)
+Fonctionnalité  personnalisée Fonctionnalité  additionnelle  dans l’app  ou le Back -Office €3,000
+Back -Office propriétaire + Back -End Plateforme  opérationnelle  Cezigue  (licence optionnelle ) €20,000
+Formation 1 session (demi -journée ) €1,000
+Intégration  de dongles existants Intégration  des appareils  déjà utilisés  par le client Free
+Audit de transition vers l’électrique  (EV)Audit de 10 jours  + accompagnement  à la stratégie  
+d’électrification€10,000
+Livrable Description Prix Unitaire  (€)
+Abonnement App + Dongle Full access per vehicle (with hardware) €24 / vehicle / month
+Abonnement App -Only Sans matériel ( accès  digital uniquement ) €15 / vehicle / month
+Nounou App Application de gestion de flotte  (abonnement 1 an) €420 / year
+MirePOI  AppApplication d’infrastructure  & de recharge EV 
+(abonnement 1 an)€420 / year
+Aperçu des Plans Tarifaires
+--- PAGE BREAK ---
+Gérez  votre  flotte  — au lieu de 
+la poursuivre . 
+Parlons -en !
+randy.ralijaona@cezigue.io
+cezigue.io+33 7 87 82 09 59
+
+--- PAGE BREAK ---
+Sources
+Slide 1: “Key Figures 2025”
+Berg Insight. (2025, March 7). Fleet Management in Europe 2025: Digitalization Trends and Telematics Adoption. Lytx. Retrieve d from https://www.lytx.com/en -gb/blog/berg -
+insights -fleet -management -in-europe -2025
+Berg Insight AB. (2024, December). Fleet Management in Europe – 19th Edition (Public Summary). Gothenburg: Berg Insight AB. Retr ieved from 
+https://media.berginsight.com/2024/12/01230951/bi -fm19 -ps.pdf
+Fleet Europe. (2024, April 8). BEVs not responsible for 30 % rise in fleet TCO. Retrieved from https://www.fleeteurope.com/en/financial -models/europe/features/bevs -not-
+responsible -30-rise-fleet -tco?a=JMA06&t%5B0%5D=Arval%20Mobility%20Observatory&t%5B1%5D=TCO&t%5B2%5D=Electrification&curl=1
+Fleet News. (2024, March 14). Repair delays causing vehicle downtime problem for one in four fleets. Retrieved from https://www.fleetnews.co.uk/news/repair -delays -causing -
+vehicle -downtime -problem -for-one-in-four-fleets#:~:text=Downtime%2C%20due%20to%20vehicles%20awaiting,Observatory%20Fleet%20and%2 0Mobility%20Barometer
+Fleet Europe. (2024, May 10). Fleet TCO fall slightly in 2024. Retrieved from https://www.fleeteurope.com/en/financial -models/europe/features/fleet -tco-fall-slightly -
+2024?a=JMA06&t%5B0%5D=Fleet%20Europe%20Days&t%5B1%5D=IFMI&t%5B2%5D=Ayvens&t%5B3%5D=Arval&t%5B4%5D=SEAT&curl=1
+Onward Fleet. (2024, December 20). 2024 Fleet Tech Trends: AI, Sustainability, and Connectivity in the Driver’s Seat. Retriev ed from https://onwardfleet.com/2024 -fleet -tech -
+trends -ai-sustainability -and-connectivity -in-the-drivers -seat/#:~:text=2024%20Fleet%20T ech%20Trends%3A%20AI%2C, —%20even%20for%20 the
+--- PAGE BREAK ---

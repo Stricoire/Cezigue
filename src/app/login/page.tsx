@@ -35,20 +35,18 @@ export default function LoginPage({
 
         {/* Social Auth (Google / Apple) */}
         <form className="flex flex-col gap-3">
-          <Button type="submit" formAction={signInWithProvider.bind(null, 'google')} variant="outline" className="h-12 border-muted-foreground/30 font-bold hover:bg-secondary/10 hover:text-secondary hover:border-secondary transition-colors">
-            {/* SVG Google placeholder */}
+          <button type="submit" formAction={signInWithProvider.bind(null, 'google')} className="inline-flex items-center justify-center rounded-lg border bg-background hover:bg-muted text-foreground transition-all h-12 font-bold w-full border-muted-foreground/30 hover:border-secondary hover:text-secondary group">
             <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
               <path fill="currentColor" d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
             </svg>
             Continuer avec Google
-          </Button>
-          <Button type="submit" formAction={signInWithProvider.bind(null, 'apple')} variant="outline" className="h-12 border-muted-foreground/30 font-bold hover:bg-primary/10 hover:text-primary hover:border-primary transition-colors">
-            {/* SVG Apple placeholder */}
+          </button>
+          <button type="submit" formAction={signInWithProvider.bind(null, 'apple')} className="inline-flex items-center justify-center rounded-lg border bg-background hover:bg-muted text-foreground transition-all h-12 font-bold w-full border-muted-foreground/30 hover:border-primary hover:text-primary group">
             <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
               <path fill="currentColor" d="M15.176 10.978c-.015-3.082 2.529-4.568 2.645-4.639-1.442-2.108-3.663-2.39-4.437-2.42-1.892-.191-3.693 1.116-4.654 1.116-.96 0-2.47-1.087-4.04-1.06-2.036.027-3.921 1.183-4.966 3.013-2.115 3.666-.541 9.083 1.517 12.054 1.01 1.457 2.193 3.087 3.774 3.031 1.512-.058 2.083-.974 3.916-.974 1.815 0 2.348.974 3.93.945 1.637-.027 2.668-1.488 3.66-2.946 1.144-1.671 1.614-3.292 1.636-3.376-.035-.015-3.155-1.213-3.149-4.704M14.618 3.82c.83-.996 1.385-2.383 1.233-3.757-1.189.048-2.618.791-3.473 1.8-0.76.892-1.431 2.308-1.258 3.659 1.332.103 2.66-0.697 3.498-1.701"/>
             </svg>
             Continuer avec Apple
-          </Button>
+          </button>
         </form>
 
         <div className="relative">
@@ -81,14 +79,14 @@ export default function LoginPage({
             />
           </div>
           <div className="flex gap-2 mt-2">
-            <Button type="submit" formAction={login} className="flex-1 bg-primary text-primary-foreground font-bold h-12 hover:bg-primary/90 transition-transform active:scale-95 shadow-[0_4px_14px_0_rgba(20,20,20,0.39)]">
+            <button type="submit" formAction={login} className="inline-flex items-center justify-center rounded-lg border border-transparent bg-primary text-primary-foreground font-bold h-12 flex-1 shadow-md hover:bg-primary/90 transition-all active:scale-95 group">
               <ShieldCheck className="w-5 h-5 mr-2" />
               Connexion
-            </Button>
-            <Button type="submit" formAction={signup} variant="outline" className="flex-1 h-12 border-primary/40 text-primary font-bold hover:bg-primary/10 transition-transform active:scale-95">
+            </button>
+            <button type="submit" formAction={signup} className="inline-flex items-center justify-center rounded-lg border border-primary/40 bg-transparent text-primary font-bold h-12 flex-1 hover:bg-primary/10 transition-all active:scale-95 group">
               <UserPlus className="w-5 h-5 mr-2" />
               Créer compte
-            </Button>
+            </button>
           </div>
         </form>
 

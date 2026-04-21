@@ -4,8 +4,8 @@ import { NextResponse } from 'next/server'
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get('code')
-  // S'il y a un paramètre 'next' personnalisé, on le récupère, sinon par défaut on va au Bunker
-  const next = requestUrl.searchParams.get('next') ?? '/admin'
+  // S'il y a un paramètre 'next' personnalisé, on le récupère, sinon par défaut on va au Hub B2C
+  const next = requestUrl.searchParams.get('next') ?? '/services'
 
   if (code) {
     // Échange du code de sécurité temporaire contre un Token de Session persistant (Cookie SSR)

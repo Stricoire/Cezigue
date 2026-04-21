@@ -1,15 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MapPin, Car, Train, Clock, ArrowRight, Navigation, ChevronDown, Users, Bus, Leaf } from "lucide-react";
 import AutocompleteInput from "./AutocompleteInput";
 import dynamic from "next/dynamic";
 
 const RouteMap = dynamic(() => import("./RouteMap"), { ssr: false });
 
-export default function RoutePlanner({ initialOrigin = "" }: { initialOrigin?: string }) {
+export default function RoutePlanner({ initialOrigin = "", externalDestination = "" }: { initialOrigin?: string, externalDestination?: string }) {
   const [origin, setOrigin] = useState<string>(initialOrigin);
-  const [destination, setDestination] = useState<string>("");
+  const [destination, setDestination] = useState<string>(externalDestination);
   const [licensePlate, setLicensePlate] = useState<string>("");
   const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [time, setTime] = useState<string>("08:00");
@@ -28,6 +28,15 @@ export default function RoutePlanner({ initialOrigin = "" }: { initialOrigin?: s
   const [calculating, setCalculating] = useState<boolean>(false);
   const [results, setResults] = useState<any>(null);
   const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
+
+  // Sync incoming external destination requests
+  useEffect(() => {
+    if (externalDestination && externalDestination !== destination) {
+       setDestination(externalDestination);
+       setIsConfigExpanded(true); // Re-open config panel so user can click "Calculer"
+       // We could auto-calculate, but giving user control to adjust time is better.
+    }
+  }, [externalDestination]);
 
   const calculateRoute = async () => {
     setCalculating(true);
