@@ -1,15 +1,20 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Fuel, CalendarDays, Cog, Activity, Lightbulb } from "lucide-react";
+import { ArrowRight, Fuel, CalendarDays, Cog, Activity, Lightbulb, Compass } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import PublicNewsWidget from "@/components/public-news-widget";
 import InteractiveHubStore from "@/components/InteractiveHubStore";
+import NewsTicker from "@/components/NewsTicker";
+import MicroServicesCarousel from "@/components/MicroServicesCarousel";
+import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ region?: string }> }) {
   const params = await searchParams;
   const region = params.region || "Toutes";
+  const supabase = await createClient();
+  const { data: { session } } = await supabase.auth.getSession();
 
   return (
     <main className="flex min-h-screen flex-col items-center relative overflow-x-hidden bg-background">
@@ -27,27 +32,40 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ r
         </div>
         
         <div className="flex items-center gap-8 text-sm font-bold text-muted-foreground hidden md:flex">
-          <Link href="/news" className="hover:text-primary cursor-pointer transition-colors flex items-center gap-2">
-            <Activity className="w-4 h-4 text-primary" /> Le Flux
+          <Link href="/services" className="hover:text-primary cursor-pointer transition-colors flex items-center gap-2">
+            <Activity className="w-4 h-4 text-primary" /> Les Micro-services
           </Link>
-          <Link href="/incubator/pitch" className="hover:text-foreground cursor-pointer transition-colors">Startup Studio</Link>
-          <span className="hover:text-foreground cursor-pointer transition-colors px-3 py-1.5 bg-muted text-foreground rounded-full border border-border/50">Flottes Pro</span>
+          <Link href="/products" className="hover:text-foreground cursor-pointer transition-colors">Les Offres Pro</Link>
+          <Link href="/studio" className="hover:text-foreground cursor-pointer transition-colors">Le Startup Studio</Link>
         </div>
 
         <div className="flex items-center gap-3">
-          <Link href="/login" className="text-sm font-bold hover:text-foreground/80 hidden sm:block">
-            S'identifier
-          </Link>
-          <Link href="/login">
-            <Button className="rounded-full tracking-wide font-black px-6 shadow-[0_4px_14px_0_rgba(20,20,20,0.39)] dark:shadow-[0_4px_14px_0_rgba(255,255,255,0.1)] bg-foreground text-background hover:bg-foreground/90 transition-all hover:scale-105">
-              Accès Gratuit
-            </Button>
-          </Link>
+          {session ? (
+            <Link href="/services">
+              <Button className="rounded-full tracking-wide font-black px-6 shadow-[0_4px_14px_0_rgba(20,20,20,0.39)] dark:shadow-[0_4px_14px_0_rgba(255,255,255,0.1)] bg-foreground text-background hover:bg-foreground/90 transition-all hover:scale-105">
+                Mon Espace
+              </Button>
+            </Link>
+          ) : (
+            <>
+              <Link href="/login" className="text-sm font-bold hover:text-foreground/80 hidden sm:block">
+                S'identifier
+              </Link>
+              <Link href="/login">
+                <Button className="rounded-full tracking-wide font-black px-6 shadow-[0_4px_14px_0_rgba(20,20,20,0.39)] dark:shadow-[0_4px_14px_0_rgba(255,255,255,0.1)] bg-foreground text-background hover:bg-foreground/90 transition-all hover:scale-105">
+                  Accès Gratuit
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 
+      {/* Bandeau d'actualités en temps réel (Ticker) */}
+      <NewsTicker />
+
       {/* Main Content Layout - Minimalist Hero */}
-      <div className="w-full max-w-7xl px-4 py-6 md:py-10 z-10 flex flex-col gap-12">
+      <div className="w-full max-w-7xl px-4 pt-2 pb-6 md:pt-4 md:pb-10 z-10 flex flex-col gap-12">
         
         {/* SECTION 1 : Le Moteur de Recherche B2C (Interactive SPA) */}
         <InteractiveHubStore />
@@ -70,69 +88,9 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ r
               <div className="flex items-center gap-3 mb-6">
                 <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-white text-xs font-bold">1</span>
                 <h4 className="text-xl font-bold text-foreground">Vos Micro-Services Locaux</h4>
-                <div className="h-px bg-border flex-1 ml-4 hidden sm:block"></div>
+                <Link href="/services/local" className="ml-auto text-sm font-bold text-primary hover:underline flex items-center gap-1">Voir les détails <ArrowRight className="w-4 h-4" /></Link>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Outil 1 : Économies */}
-                <div className="bg-card border border-border/60 rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col group">
-                  <div className="relative w-full h-40 bg-muted overflow-hidden">
-                    <Image src="/b2c/radar_iso.png" alt="Radar Économique" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                    <div className="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm z-10">
-                      <Fuel className="w-5 h-5 text-orange-600" />
-                    </div>
-                    {/* Overlay Hover */}
-                    <div className="absolute inset-0 bg-orange-600/95 backdrop-blur-sm flex flex-col justify-center p-6 opacity-0 group-hover:opacity-100 transition-all duration-500 z-20">
-                      <p className="text-white text-sm font-medium leading-relaxed">
-                        Visualisez en temps réel les prix des carburants et l'état des stations. Idéal pour les conducteurs réguliers et les familles cherchant à optimiser leur budget quotidien.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="p-6 flex flex-col flex-1">
-                    <h4 className="font-bold text-lg mb-2 text-foreground">Radar Économique</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">Cartographie temps réel des prix des carburants et points de recharge électrique autour de vous.</p>
-                  </div>
-                </div>
-                
-                {/* Outil 2 : Territoire */}
-                <div className="bg-card border border-border/60 rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col group">
-                  <div className="relative w-full h-40 bg-muted overflow-hidden">
-                    <Image src="/b2c/datatourisme_iso.png" alt="Vie Locale" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                    <div className="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm z-10">
-                      <CalendarDays className="w-5 h-5 text-blue-600" />
-                    </div>
-                    {/* Overlay Hover */}
-                    <div className="absolute inset-0 bg-orange-600/95 backdrop-blur-sm flex flex-col justify-center p-6 opacity-0 group-hover:opacity-100 transition-all duration-500 z-20">
-                      <p className="text-white text-sm font-medium leading-relaxed">
-                        Agrégation hyperlocale des événements de votre commune (marchés, brocantes, festivités). Pensé pour les citoyens en quête de dynamisme et de reconnexion territoriale.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="p-6 flex flex-col flex-1">
-                    <h4 className="font-bold text-lg mb-2 text-foreground">Vie Locale (DATAtourisme)</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">Agenda des marchés, brocantes et événements synchronisés directement par les mairies.</p>
-                  </div>
-                </div>
-
-                {/* Outil 3 : Multimodale */}
-                <div className="bg-card border border-border/60 rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col group">
-                  <div className="relative w-full h-40 bg-muted overflow-hidden">
-                    <Image src="/b2c/multimodal_iso.png" alt="Multimodal" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                    <div className="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm z-10">
-                      <Activity className="w-5 h-5 text-emerald-600" />
-                    </div>
-                    {/* Overlay Hover */}
-                    <div className="absolute inset-0 bg-orange-600/95 backdrop-blur-sm flex flex-col justify-center p-6 opacity-0 group-hover:opacity-100 transition-all duration-500 z-20">
-                      <p className="text-white text-sm font-medium leading-relaxed">
-                        Synchronisation instantanée des horaires de bus, trains et vélos. La solution ultime pour les nomades et les adeptes des mobilités douces péri-urbaines.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="p-6 flex flex-col flex-1">
-                    <h4 className="font-bold text-lg mb-2 text-foreground">Mobilité Multimodale</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">Horaires de bus, trains et flottes partagées consolidés via le registre national (PAN).</p>
-                  </div>
-                </div>
-              </div>
+              <MicroServicesCarousel />
             </div>
 
             {/* SOUS-SECTION B : B2B Logiciels Métiers */}
@@ -144,7 +102,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ r
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Logiciel 1 : NouNou */}
-                <Link href="/incubator/pitch" className="block bg-card border border-border/60 rounded-2xl shadow-sm hover:shadow-md transition-all hover:border-primary/50 group flex flex-col h-full overflow-hidden">
+                <Link href="/products/nounou" className="block bg-card border border-border/60 rounded-2xl shadow-sm hover:shadow-md transition-all hover:border-primary/50 group flex flex-col h-full overflow-hidden">
                   <div className="relative w-full h-40 bg-zinc-50 border-b border-border/40 overflow-hidden">
                      <Image src="/b2b/nounou_v2.png" alt="NouNou" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                      {/* Overlay Hover */}
@@ -165,7 +123,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ r
                 </Link>
 
                 {/* Logiciel 2 : MirePOI */}
-                <Link href="/incubator/pitch" className="block bg-card border border-border/60 rounded-2xl shadow-sm hover:shadow-md transition-all hover:border-primary/50 group flex flex-col h-full overflow-hidden">
+                <Link href="/products/mirepoi" className="block bg-card border border-border/60 rounded-2xl shadow-sm hover:shadow-md transition-all hover:border-primary/50 group flex flex-col h-full overflow-hidden">
                   <div className="relative w-full h-40 bg-zinc-50 border-b border-border/40 overflow-hidden">
                      <Image src="/b2b/mirepoi_v2.png" alt="MirePOI" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                      {/* Overlay Hover */}
@@ -186,7 +144,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ r
                 </Link>
 
                 {/* Logiciel 3 : Majordome */}
-                <Link href="/incubator/pitch" className="block bg-card border border-border/60 rounded-2xl shadow-sm hover:shadow-md transition-all hover:border-primary/50 group flex flex-col h-full overflow-hidden">
+                <Link href="/products/majordome" className="block bg-card border border-border/60 rounded-2xl shadow-sm hover:shadow-md transition-all hover:border-primary/50 group flex flex-col h-full overflow-hidden">
                   <div className="relative w-full h-40 bg-zinc-50 border-b border-border/40 overflow-hidden">
                      <Image src="/b2b/majordome_v2.png" alt="Majordome" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                      {/* Overlay Hover */}
@@ -216,7 +174,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ r
                 <div className="h-px bg-border flex-1 ml-4 hidden sm:block"></div>
               </div>
               
-              <Link href="/incubator/pitch" className="block bg-card border border-border/60 rounded-2xl shadow-sm hover:shadow-md transition-all hover:border-primary/50 group overflow-hidden">
+              <Link href="/studio" className="block bg-card border border-border/60 rounded-2xl shadow-sm hover:shadow-md transition-all hover:border-primary/50 group overflow-hidden">
                 <div className="flex flex-col md:flex-row h-full">
                   <div className="relative w-full md:w-5/12 h-64 md:h-auto bg-muted overflow-hidden border-b md:border-b-0 md:border-r border-border/40">
                     <Image src="/b2b/startup_studio.png" alt="Startup Studio Cezigue" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />

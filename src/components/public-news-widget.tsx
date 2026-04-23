@@ -24,10 +24,19 @@ export default async function PublicNewsWidget({ region = "Toutes" }: { region?:
 
   const { data: rawArticles, error } = await query;
 
-  let articles = rawArticles || [];
-  if (region === "Toutes" && articles.length > 0) {
-    // Determine sort based on ID to avoid Math.random() impurity in React render
-    articles = articles.sort((a, b) => a.id.localeCompare(b.id)).slice(0, 4);
+  let articles = [];
+  if (rawArticles) {
+    const seenThemes = new Set();
+    for (const article of rawArticles) {
+      // Use the premium insight as the unique key for the theme. 
+      // If it doesn't exist, fallback to the basic insight or title to avoid dropping unanalyzed ones.
+      const themeKey = article.marlowe_insight_premium || article.marlowe_insight || article.titre;
+      if (!seenThemes.has(themeKey)) {
+        seenThemes.add(themeKey);
+        articles.push(article);
+        if (articles.length >= 4) break;
+      }
+    }
   }
 
   if (error || !articles || articles.length === 0) return null;

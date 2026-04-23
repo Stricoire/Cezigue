@@ -5,16 +5,19 @@ import { Store, MapPin, Loader2, CalendarDays, Filter, Map as MapIcon, List, Clo
 import dynamic from "next/dynamic";
 
 const LocalActivityMap = dynamic(() => import("@/components/LocalActivityMap"), { ssr: false });
+import { POI_TAXONOMY } from "@/config/poi_taxonomy";
 
 interface POI {
   id: string;
   title: string;
   type: string;
+  metaCategory?: string;
   distance: string;
   rawDist: number;
   icon: string;
   source: string;
   lat?: string;
+  lon?: string;
   date?: string;
   description?: string;
   openingHours?: string;
@@ -29,24 +32,14 @@ interface POI {
   categories?: string[];
 }
 
-const CATEGORIES_DISPONIBLES = ['Commerce', 'Santé', 'Service', 'Événement Culturel', 'Activité Touristique', 'Activité Sportive', 'Randonnée & Vélo'];
-
-export const CATEGORY_THEMES: Record<string, { color: string, bg: string, text: string, border: string, bgSolid: string, ring: string }> = {
-    'Commerce':           { color: 'amber', bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-300', bgSolid: 'bg-amber-500', ring: 'ring-amber-200' },
-    'Santé':              { color: 'red', bg: 'bg-red-100', text: 'text-red-700', border: 'border-red-300', bgSolid: 'bg-red-500', ring: 'ring-red-200' },
-    'Service':            { color: 'slate', bg: 'bg-slate-100', text: 'text-slate-700', border: 'border-slate-300', bgSolid: 'bg-slate-500', ring: 'ring-slate-200' },
-    'Événement Culturel': { color: 'fuchsia', bg: 'bg-fuchsia-100', text: 'text-fuchsia-700', border: 'border-fuchsia-300', bgSolid: 'bg-fuchsia-500', ring: 'ring-fuchsia-200' },
-    'Activité Touristique': { color: 'cyan', bg: 'bg-cyan-100', text: 'text-cyan-700', border: 'border-cyan-300', bgSolid: 'bg-cyan-500', ring: 'ring-cyan-200' },
-    'Activité Sportive':  { color: 'lime', bg: 'bg-lime-100', text: 'text-lime-700', border: 'border-lime-300', bgSolid: 'bg-lime-500', ring: 'ring-lime-200' },
-    'Randonnée & Vélo':   { color: 'emerald', bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-300', bgSolid: 'bg-emerald-500', ring: 'ring-emerald-200' },
-    'Par défaut':         { color: 'orange', bg: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-300', bgSolid: 'bg-orange-500', ring: 'ring-orange-200' }
-};
-
-export function getPoiTheme(catOrPoi: any) {
-    const typeOrCat = typeof catOrPoi === 'string' ? catOrPoi : (catOrPoi?.categories?.[0] || catOrPoi?.type || 'Par défaut');
-    if (typeOrCat === 'Pharmacie') return CATEGORY_THEMES['Santé'];
-    if (typeOrCat === "Parc d'attraction") return CATEGORY_THEMES['Activité Touristique'];
-    return CATEGORY_THEMES[typeOrCat] || CATEGORY_THEMES['Par défaut'];
+export function getPoiTheme(metaCategoryOrPoi: any) {
+    const metaCat = typeof metaCategoryOrPoi === 'string' 
+      ? metaCategoryOrPoi 
+      : (metaCategoryOrPoi?.metaCategory || 'Autres Services');
+      
+    if (POI_TAXONOMY[metaCat]) return POI_TAXONOMY[metaCat].theme;
+    
+    return POI_TAXONOMY['Autres Services'].theme;
 }
 
 export default function LocalActivityRadar({ 
@@ -103,10 +96,11 @@ export default function LocalActivityRadar({
   };
 
   // Filtres
-  const [categories, setCategories] = useState<string[]>(CATEGORIES_DISPONIBLES);
+  const ALL_META_CATEGORIES = Object.keys(POI_TAXONOMY);
+  const [categories, setCategories] = useState<string[]>(ALL_META_CATEGORIES);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
-  const [debouncedFilters, setDebouncedFilters] = useState({ categories: CATEGORIES_DISPONIBLES, startDate: "", endDate: "" });
+  const [debouncedFilters, setDebouncedFilters] = useState({ categories: ALL_META_CATEGORIES, startDate: "", endDate: "" });
 
   // Heatmap State
   const [mapMode, setMapMode] = useState<'normal' | 'vibe' | 'freshness'>('normal');
@@ -267,25 +261,26 @@ export default function LocalActivityRadar({
                 <span className="text-xs font-bold uppercase tracking-wider text-neutral-700">Filtrer par Catégorie</span>
             </div>
             <div className="flex flex-wrap gap-2">
-                {CATEGORIES_DISPONIBLES.map(cat => {
+                {ALL_META_CATEGORIES.map(cat => {
                     const isActive = categories.includes(cat);
                     const theme = getPoiTheme(cat);
+                    const icon = POI_TAXONOMY[cat].icon;
                     return (
                         <button 
                             key={cat}
                             onClick={() => toggleCategory(cat)}
                             className={`px-3 py-1.5 text-xs font-bold rounded-md border transition-all ${isActive ? `${theme.bg} ${theme.border} ${theme.text} shadow-sm` : 'bg-white border-neutral-200 text-neutral-500 hover:bg-neutral-50 hover:border-neutral-300'}`}
                         >
-                            {isActive ? '✓ ' : ''}{cat}
+                            {isActive ? '✓ ' : ''}{icon} {cat}
                         </button>
                     )
                 })}
             </div>
 
-            {CATEGORIES_DISPONIBLES.filter(cat => categories.includes(cat)).length > 0 && (
+            {ALL_META_CATEGORIES.filter(cat => categories.includes(cat)).length > 0 && (
                 <div className="flex flex-col gap-1.5 mt-2">
-                    {CATEGORIES_DISPONIBLES.filter(c => categories.includes(c)).map(cat => {
-                        const typesForCat = Array.from(new Set(pois.filter(p => p.categories?.[0] === cat && p.type).map(p => p.type))).sort();
+                    {ALL_META_CATEGORIES.filter(c => categories.includes(c)).map(cat => {
+                        const typesForCat = Array.from(new Set(pois.filter(p => p.metaCategory === cat && p.type).map(p => p.type))).sort();
                         if (typesForCat.length === 0) return null;
                         
                         const theme = getPoiTheme(cat);
@@ -439,7 +434,7 @@ export default function LocalActivityRadar({
 
                             {/* Details enriched */}
                             {(isSelected || poi.isDutyPharmacy || poi.openingHours || poi.address || poi.phone || poi.website) && (
-                                <div className="mt-3 pt-3 border-t border-neutral-100 flex flex-col gap-2 animate-in fade-in slide-in-from-top-1">
+                                <div className="mt-3 pt-3 border-t border-neutral-100 flex flex-col gap-3 animate-in fade-in slide-in-from-top-1 w-full">
                                     {poi.isDutyPharmacy && (
                                         <span className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase bg-red-100 text-red-700 px-2 py-1 rounded w-fit border border-red-200 shadow-sm">
                                             <AlertTriangle className="w-3.5 h-3.5" /> Pharmacie de Garde Potentielle (24/7)
@@ -448,21 +443,35 @@ export default function LocalActivityRadar({
                                     {poi.address && (
                                         <div className="flex items-start gap-1.5 text-[11px] text-neutral-600 bg-neutral-50 p-2 rounded border border-neutral-100">
                                             <MapPin className="w-3.5 h-3.5 text-neutral-400 mt-0.5 shrink-0" />
-                                            <span className="font-medium max-w-[250px] truncate">{poi.address}</span>
+                                            <span>{poi.address}</span>
                                         </div>
                                     )}
-                                    {poi.phone && (
-                                        <div className="flex items-center gap-1.5 text-[11px] text-neutral-600 bg-neutral-50 p-2 rounded border border-neutral-100">
-                                            <Phone className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
-                                            <a href={`tel:${poi.phone!.replace(/\s+/g, '')}`} className="font-medium hover:text-blue-600 hover:underline">{poi.phone}</a>
-                                        </div>
-                                    )}
-                                    {poi.website && (
-                                        <div className="flex items-center gap-1.5 text-[11px] text-neutral-600 bg-neutral-50 p-2 rounded border border-neutral-100">
-                                            <Globe className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
-                                            <a href={poi.website.startsWith('http') ? poi.website : `https://${poi.website}`} target="_blank" rel="noopener noreferrer" className="font-medium hover:text-blue-600 hover:underline truncate" title={poi.website}>{poi.website.replace(/^https?:\/\//, '')}</a>
-                                        </div>
-                                    )}
+                                    
+                                    {/* Action Buttons PWA */}
+                                    <div className="flex flex-wrap items-center gap-2 mt-1">
+                                      {poi.phone && (
+                                          <a href={`tel:${poi.phone.replace(/\s+/g, '')}`} onClick={(e) => e.stopPropagation()} className={`flex-1 min-w-[100px] flex items-center justify-center gap-2 text-xs font-bold py-2 px-3 rounded border ${themeClasses.border} ${themeClasses.bg} ${themeClasses.textType} hover:brightness-95 transition-all shadow-sm`}>
+                                            <Phone className="w-3.5 h-3.5" /> Appeler
+                                          </a>
+                                      )}
+                                      {poi.website && (
+                                          <a href={poi.website.startsWith('http') ? poi.website : `https://${poi.website}`} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="flex-1 min-w-[100px] flex items-center justify-center gap-2 text-xs font-bold py-2 px-3 rounded border border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50 transition-all shadow-sm">
+                                            <Globe className="w-3.5 h-3.5" /> Site Web
+                                          </a>
+                                      )}
+                                      {onLaunchItinerary && (
+                                          <button 
+                                              onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  onLaunchItinerary(`${poi.lat},${poi.lon}`);
+                                              }}
+                                              className="flex-1 min-w-[100px] flex items-center justify-center gap-2 text-xs font-bold py-2 px-3 rounded bg-orange-600 border border-orange-700 text-white hover:bg-orange-700 transition-all shadow-sm"
+                                          >
+                                              <Navigation className="w-3.5 h-3.5" /> Y aller
+                                          </button>
+                                      )}
+                                    </div>
+                                    
                                     {poi.openingHours && (
                                         <div className="flex items-start gap-1.5 text-[11px] text-neutral-600 bg-neutral-50 p-2 rounded border border-neutral-100">
                                             <Clock className="w-3.5 h-3.5 text-neutral-400 mt-0.5 shrink-0" />

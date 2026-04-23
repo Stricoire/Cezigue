@@ -17,7 +17,7 @@ interface Feature {
   };
 }
 
-export default function AddressInput({ onLocationFound }: { onLocationFound?: (data: any) => void }) {
+export default function AddressInput({ onLocationFound, placeholder }: { onLocationFound?: (data: any) => void, placeholder?: string }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Feature[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -88,7 +88,7 @@ export default function AddressInput({ onLocationFound }: { onLocationFound?: (d
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Renseignez votre commune ou rue (Point Zéro)..."
+          placeholder={placeholder || "Renseignez votre commune ou rue (Point Zéro)..."}
           className="w-full py-5 pl-14 pr-6 bg-transparent outline-none text-neutral-700 text-lg placeholder:text-neutral-400"
         />
         {isLoading && (

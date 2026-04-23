@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { Store, CalendarDays, Pill } from 'lucide-react';
+import { Store, CalendarDays, Pill, List } from 'lucide-react';
 import ReactDOMServer from 'react-dom/server';
 import dynamic from 'next/dynamic';
 import { getPoiTheme } from './LocalActivityRadar';
@@ -162,9 +162,22 @@ export default function LocalActivityMap({
                 {poi.openingHours && (
                    <div className="text-xs bg-slate-50 p-2 rounded border border-slate-100 text-slate-700 font-mono mt-1 whitespace-pre-wrap">
                       <span className="font-bold text-slate-500 text-[10px] uppercase block mb-1">Horaires</span>
-                      {poi.openingHours.replace(/;/g, '\\n')}
+                      {poi.openingHours.replace(/;/g, '\n')}
                    </div>
                 )}
+                
+                <button 
+                  onClick={(e) => {
+                      e.stopPropagation();
+                      const card = document.getElementById(`poi-card-${poi.id}`);
+                      if (card) {
+                          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      }
+                  }}
+                  className="mt-3 w-full flex justify-center items-center gap-1.5 bg-neutral-100 text-neutral-700 font-bold text-[10px] uppercase py-1.5 rounded-md hover:bg-neutral-200 transition-colors border border-neutral-200"
+                >
+                  <List className="w-3 h-3" /> Voir les détails dans la liste
+                </button>
               </div>
             </Popup>
           </Marker>

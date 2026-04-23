@@ -6,11 +6,16 @@ import FuelRadar from "@/components/FuelRadar";
 import RoutePlanner from "@/components/RoutePlanner";
 import WidgetWrapper from "@/components/WidgetWrapper";
 import LocalActivityRadar from "@/components/LocalActivityRadar";
-import { ArrowLeft, Droplet, TrainTrack, HeartHandshake, BoxSelect, CalendarDays, UserCheck, Store } from "lucide-react";
+import TravelPlanner from "@/components/TravelPlanner";
+import NewsWidget from "@/components/NewsWidget";
+import { ArrowLeft, Droplet, TrainTrack, HeartHandshake, BoxSelect, CalendarDays, UserCheck, Store, Compass, Activity } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 export default function ServicesPage() {
+  const router = useRouter();
   const supabase = createClient();
   const [user, setUser] = useState<any>(null);
   const [locationData, setLocationData] = useState<any>(null);
@@ -108,20 +113,31 @@ export default function ServicesPage() {
     }
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push("/");
+  };
+
   const widgetsList = [
-    { id: 'fuel', title: 'Radar Carburant', icon: <Droplet className="w-5 h-5 text-orange-500" /> },
-    { id: 'multimodal', title: 'Offre Multimodale', icon: <TrainTrack className="w-5 h-5 text-blue-500" /> },
-    { id: 'events', title: 'Vie Locale & Commerces', icon: <Store className="w-5 h-5 text-orange-600" /> },
-    { id: 'aids', title: 'Aides Locales', icon: <HeartHandshake className="w-5 h-5 text-green-500" /> }
+    { id: 'fuel', title: 'Radar Carburant', image: '/b2c/radar_iso.png', icon: <Droplet className="w-5 h-5 text-orange-600" /> },
+    { id: 'multimodal', title: 'Planificateur', image: '/b2c/multimodal_iso.png', icon: <TrainTrack className="w-5 h-5 text-blue-600" /> },
+    { id: 'events', title: 'Vie Locale', image: '/b2c/datatourisme_iso.png', icon: <Store className="w-5 h-5 text-orange-600" /> },
+    { id: 'travel-planner', title: 'Travel Planner', image: '/b2c/travel_planner_iso.png', icon: <Compass className="w-5 h-5 text-emerald-600" /> },
+    { id: 'news', title: 'Le Flux', image: '/b2c/vintage_newsstand_iso.png', icon: <Activity className="w-5 h-5 text-primary" /> },
   ];
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-8 bg-neutral-50 dark:bg-background">
-      <div className="w-full max-w-7xl mb-8 flex items-center justify-between">
-         <Link href="/" className="flex items-center text-sm font-medium text-muted-foreground hover:text-foreground">
+    <main className="flex min-h-screen flex-col items-center p-4 md:p-8 bg-[#fff5eb]">
+      <div className="w-full max-w-7xl mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
+         <Link href="/" className="flex items-center text-sm font-medium text-zinc-600 hover:text-primary transition-colors">
            <ArrowLeft className="w-4 h-4 mr-2" /> Retour à l&apos;accueil
          </Link>
-         <h1 className="text-2xl font-bold tracking-tight">Mobilité Péri-rurale</h1>
+         <h1 className="text-2xl font-black tracking-tight text-zinc-900 hidden md:block">Mobilité Péri-rurale</h1>
+         {user && (
+           <button onClick={handleLogout} className="text-sm font-bold text-red-600 hover:text-red-800 bg-red-100 hover:bg-red-200 px-4 py-2 rounded-full transition-colors">
+             Se déconnecter
+           </button>
+         )}
       </div>
 
       <div className="w-full max-w-7xl flex flex-col items-center text-center mb-12">
@@ -140,13 +156,46 @@ export default function ServicesPage() {
         </p>
       </div>
 
-      <div className="w-full max-w-5xl z-50 mb-12">
+      <div className="w-full max-w-5xl z-50 mb-8">
         <AddressInput onLocationFound={handleLocationFound} />
       </div>
       
+      {/* Tool Selection */}
+      {locationData?.lat && locationData?.lon && (
+        <div className="w-full max-w-7xl mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+            {widgetsList.map(widget => {
+              const isActive = activeWidgets.includes(widget.id);
+              return (
+                <button
+                  key={widget.id}
+                  onClick={() => toggleWidget(widget.id)}
+                  className={`relative overflow-hidden rounded-2xl shadow-sm border-2 transition-all duration-300 text-left group ${isActive ? 'border-primary shadow-md' : 'border-transparent border-zinc-200/60 hover:border-zinc-300'}`}
+                >
+                  <div className="relative w-full h-24 md:h-32 bg-white/50">
+                    <Image src={widget.image} alt={widget.title} fill className={`object-cover transition-transform duration-500 ${isActive ? 'scale-105' : 'group-hover:scale-105'}`} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-3 left-3 flex items-center gap-2">
+                      <div className="bg-white p-1.5 rounded-full shadow-sm">
+                        {widget.icon}
+                      </div>
+                      <span className="text-white font-bold text-sm drop-shadow-md leading-tight">{widget.title}</span>
+                    </div>
+                    {/* Checkbox Icon */}
+                    <div className={`absolute top-3 right-3 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isActive ? 'bg-primary border-primary' : 'bg-black/20 border-white/80'}`}>
+                      {isActive && <div className="w-2.5 h-2.5 bg-white rounded-full" />}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Dashboard Area */}
       {locationData?.lat && locationData?.lon && (
-        <div className="w-full max-w-7xl flex flex-col lg:flex-row gap-8 items-start relative">
+        <div className="w-full max-w-7xl flex flex-col gap-8 items-start relative">
           
           {/* Main Area: Render Active Widgets */}
           <div className="flex-1 w-full flex flex-col gap-6">
@@ -181,7 +230,17 @@ export default function ServicesPage() {
             >
                <RoutePlanner initialOrigin={locationData.address} externalDestination={routeDestination} />
             </WidgetWrapper>
-
+            <WidgetWrapper 
+              id="news" 
+              title="Le Flux d'Intelligence" 
+              icon={<Activity className="w-5 h-5 text-indigo-500" />} 
+              isActive={activeWidgets.includes('news')} 
+              isMaximized={maximizedWidget === 'news'} 
+              onToggleMaximize={toggleMaximize} 
+              onClose={toggleWidget}
+            >
+               <NewsWidget region={locationData.address?.state || locationData.address?.region || "Toutes"} user={user} />
+            </WidgetWrapper>
             <WidgetWrapper 
               id="events" 
               title="Vie Locale & Commerces" 
@@ -204,61 +263,21 @@ export default function ServicesPage() {
             </WidgetWrapper>
 
             <WidgetWrapper 
-              id="aids" 
-              title="Aides Locales (Bientôt)" 
-              icon={<HeartHandshake className="w-5 h-5 text-green-500" />} 
-              isActive={activeWidgets.includes('aids')} 
-              isMaximized={maximizedWidget === 'aids'} 
+              id="travel-planner" 
+              title="Travel Planner" 
+              icon={<Compass className="w-5 h-5 text-emerald-500" />} 
+              isActive={activeWidgets.includes('travel-planner')} 
+              isMaximized={maximizedWidget === 'travel-planner'} 
               onToggleMaximize={toggleMaximize} 
               onClose={toggleWidget}
             >
-               <div className="h-64 flex items-center justify-center text-neutral-400">
-                 <p>Analyse des aides au transport à venir...</p>
-               </div>
+               <TravelPlanner 
+                 user={user} 
+                 locationData={locationData} 
+                 maximized={maximizedWidget === 'travel-planner'} 
+               />
             </WidgetWrapper>
 
-          </div>
-
-          {/* Right Sidebar: Widget Menu */}
-          <div className="w-full lg:w-72 shrink-0 bg-white shadow-sm border border-neutral-200 rounded-3xl p-5 sticky top-8 z-40">
-            <h3 className="font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <BoxSelect className="w-5 h-5 text-neutral-400" />
-              Vos Outils
-            </h3>
-            <ul className="space-y-3">
-              {widgetsList.map(widget => {
-                 const isActive = activeWidgets.includes(widget.id);
-                 return (
-                   <li key={widget.id}>
-                     <button
-                       onClick={() => toggleWidget(widget.id)}
-                       className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all ${
-                          isActive 
-                            ? 'border-neutral-900 bg-neutral-900 text-white shadow-md' 
-                            : 'border-neutral-200 bg-transparent text-neutral-600 hover:border-neutral-300 hover:bg-neutral-50'
-                       }`}
-                     >
-                       <div className="flex items-center gap-3">
-                         <div className={`p-1.5 rounded-md ${isActive ? 'bg-white/10' : 'bg-neutral-100'}`}>
-                           {widget.icon}
-                         </div>
-                         <span className={`font-semibold text-sm ${isActive ? 'text-white' : 'text-neutral-700'}`}>
-                           {widget.title}
-                         </span>
-                       </div>
-                       
-                       {/* Toggle Checkbox visuel */}
-                       <div className={`w-10 h-5 rounded-full flex items-center p-0.5 transition-colors ${isActive ? 'bg-white' : 'bg-neutral-300'}`}>
-                         <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${isActive ? 'translate-x-5 bg-neutral-900' : 'translate-x-0'}`}></div>
-                       </div>
-                     </button>
-                   </li>
-                 )
-              })}
-            </ul>
-            <div className="mt-8 pt-6 border-t border-neutral-100 text-xs text-neutral-400 text-center">
-               Espace Personnel (Hub B2C) • Sprint 6
-            </div>
           </div>
         </div>
       )}

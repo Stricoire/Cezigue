@@ -1,0 +1,102 @@
+# Revue de la Taxonomie Cézigue avec les compteurs
+
+## Restauration
+*Total dans la base : 26933 POIs*
+
+- restaurant : **15774**
+- michelin_starred : **0**
+- michelin_bib : **0**
+- relais_routier : **0**
+- fast_food : **5115**
+- cafe : **2788**
+- bar : **3256**
+- restaurant_asian : **0**
+- restaurant_indian : **0**
+- restaurant_pizza : **0**
+- restaurant_burger : **0**
+
+## Commerce de Bouche
+*Total dans la base : 15112 POIs*
+
+- bakery : **4309**
+- supermarket : **2738**
+- convenience : **4087**
+- butcher : **1500**
+- seafood : **273**
+- greengrocer : **591**
+- wine : **534**
+- cheese : **393**
+- deli : **687**
+
+## Tourisme & Culture
+*Total dans la base : 1347 POIs*
+
+- museum : **779**
+- gallery : **418**
+- theme_park : **81**
+- water_park : **68**
+- monument : **0**
+- castle : **0**
+- viewpoint : **0**
+- event : **0**
+- information : **1**
+
+## Santé & Soins
+*Total dans la base : 6116 POIs*
+
+- pharmacy : **2875**
+- hospital : **377**
+- clinic : **302**
+- doctors : **1827**
+- dentist : **735**
+
+## Services Publics & Pratiques
+*Total dans la base : 10554 POIs*
+
+- townhall : **1**
+- public_building : **116**
+- post_office : **3447**
+- bank : **3285**
+- atm : **0**
+- toilets : **0**
+- gas : **607**
+- car_wash : **0**
+- car_repair : **3098**
+- waste_disposal : **0**
+- waste_basket : **0**
+
+## Boutiques & Services
+*Total dans la base : 22222 POIs*
+
+- bicycle : **752**
+- clothes : **6089**
+- beauty : **2105**
+- hairdresser : **5346**
+- books : **719**
+- newsagent : **746**
+- tobacco : **737**
+- doityourself : **909**
+- hardware : **211**
+- laundry : **729**
+- dry_cleaning : **308**
+- shoe_repair : **63**
+- florist : **1129**
+- jewelry : **1057**
+- pet : **272**
+- mobile_phone : **581**
+- electronics : **469**
+
+## Nature & Activités Sportives
+*Total dans la base : 9758 POIs*
+
+- beach : **0**
+- swimming_area : **0**
+- park : **2679**
+- forest : **0**
+- hiking : **0**
+- cycling : **0**
+- swimming_pool : **372**
+- sports_centre : **3065**
+- playground : **640**
+- pitch : **3002**
+

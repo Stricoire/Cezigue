@@ -17,7 +17,9 @@ CREATE INDEX IF NOT EXISTS idx_cezigue_enrichments_poi_id ON public.cezigue_enri
 
 -- RLS
 ALTER TABLE public.cezigue_enrichments ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Lecture libre des enrichissements" ON public.cezigue_enrichments;
 CREATE POLICY "Lecture libre des enrichissements" ON public.cezigue_enrichments FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Le serveur peut enrichir" ON public.cezigue_enrichments;
 CREATE POLICY "Le serveur peut enrichir" ON public.cezigue_enrichments FOR ALL USING (auth.role() = 'service_role');
 
 
@@ -63,6 +65,6 @@ BEGIN
     OR categories && p_categories
   )
   ORDER BY location <-> ST_SetSRID(ST_MakePoint(p_lon, p_lat), 4326)::geography
-  LIMIT 500;
+  LIMIT 2500;
 END;
 $$ LANGUAGE plpgsql STABLE;

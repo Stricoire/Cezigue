@@ -41,12 +41,14 @@ CREATE INDEX IF NOT EXISTS idx_unified_pois_source ON public.unified_pois (sourc
 ALTER TABLE public.unified_pois ENABLE ROW LEVEL SECURITY;
 
 -- Lecture publique
+DROP POLICY IF EXISTS "Lectures publiques autorisées" ON public.unified_pois;
 CREATE POLICY "Lectures publiques autorisées"
     ON public.unified_pois
     FOR SELECT
     USING (true);
 
 -- Ecriture uniquement par le serveur local/CRON via la Service Key
+DROP POLICY IF EXISTS "Seul le serveur peut modifier" ON public.unified_pois;
 CREATE POLICY "Seul le serveur peut modifier"
     ON public.unified_pois
     FOR ALL
@@ -76,6 +78,6 @@ BEGIN
     OR categories && p_categories -- intersection: si un des tags demandés est dans l'array du POI
   )
   ORDER BY location <-> ST_SetSRID(ST_MakePoint(p_lon, p_lat), 4326)::geography
-  LIMIT 500;
+  LIMIT 2500;
 END;
 $$ LANGUAGE plpgsql STABLE;
