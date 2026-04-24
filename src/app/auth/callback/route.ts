@@ -13,10 +13,10 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     
     if (!error) {
-      return NextResponse.redirect(`${requestUrl.origin}${next}`)
+      return NextResponse.redirect(new URL(next, request.url))
     }
   }
 
   // En cas d'erreur de token ou de code expiré, on redirige vers le login avec le drapeau d'erreur
-  return NextResponse.redirect(`${requestUrl.origin}/login?error=true`)
+  return NextResponse.redirect(new URL('/login?error=true', request.url))
 }

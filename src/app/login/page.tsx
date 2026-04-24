@@ -3,11 +3,10 @@ import { Input } from "@/components/ui/input";
 import { ShieldCheck, UserPlus } from "lucide-react";
 import { login, signup, signInWithProvider } from "./actions";
 
-export default function LoginPage({
-  searchParams,
-}: {
-  searchParams: { error?: string }
+export default async function LoginPage(props: {
+  searchParams: Promise<{ error?: string }>
 }) {
+  const searchParams = await props.searchParams;
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4 relative overflow-hidden">
       

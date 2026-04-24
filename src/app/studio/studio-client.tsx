@@ -109,7 +109,7 @@ export function MarinaIdeasList({ ideas, initialIdeaId }: { ideas: any[], initia
           const insights = idea.insight.split('|||');
           const headerTitle = insights[0] || "Tendance Marché";
           const contextStr = insights[1]?.replace("Note Stratégique :", "").trim() || "";
-          const opportunityHtml = insights[2] || "";
+          const optHtml = insights[2] || "";
 
           const uniqueArticlesMap = new Map();
           idea.articles.forEach((art: any) => {
@@ -133,7 +133,7 @@ export function MarinaIdeasList({ ideas, initialIdeaId }: { ideas: any[], initia
                 <h3 className="text-lg font-black text-slate-900 leading-snug mb-2 group-hover:text-indigo-600 transition-colors line-clamp-2">{headerTitle}</h3>
                 <p className="text-sm text-slate-600 line-clamp-3 mb-4">
                   <strong className="text-indigo-600 font-bold">Idée SaaS : </strong>
-                  {opportunityHtml.replace(/<[^>]+>/g, '').split('L\'idée de Startup (SaaS/App) :').pop()?.trim() || contextStr}
+                  {optHtml ? optHtml.replace(/<[^>]+>/g, '').split('L\'idée de Startup (SaaS/App) :').pop()?.trim() : contextStr}
                 </p>
                 <div className="mt-auto pt-4 border-t border-slate-100 text-xs font-bold text-indigo-600 flex items-center justify-between">
                   <span>Découvrir l'opportunité</span>
@@ -171,7 +171,7 @@ export function MarinaIdeasList({ ideas, initialIdeaId }: { ideas: any[], initia
                 const insights = selectedIdea.insight.split('|||');
                 const headerTitle = insights[0] || "Tendance Marché";
                 const contextStr = insights[1]?.replace("Note Stratégique :", "").trim() || "";
-                const opportunityHtml = insights[2] || "";
+                const optHtml = insights[2] || "";
 
                 // Dédoublonnage des sources
                 const uniqueArticlesMap = new Map();
@@ -189,7 +189,7 @@ export function MarinaIdeasList({ ideas, initialIdeaId }: { ideas: any[], initia
                     </div>
 
                     <div className="space-y-4 mb-8">
-                      {opportunityHtml.split('<br/><br/>').map((part: string, pIdx: number) => {
+                      {optHtml.split('<br/><br/>').map((part: string, pIdx: number) => {
                         if (!part.trim()) return null;
                         const isIdea = part.includes("L'idée de Startup");
                         return (

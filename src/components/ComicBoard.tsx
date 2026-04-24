@@ -3,7 +3,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
-import Link from 'next/link';
+import NextLink from 'next/link';
 
 interface ComicPanel {
   imageSrc: string;
@@ -110,13 +110,13 @@ export function ComicBoard({ title, subtitle, panels, ctaText = "Soumettre une i
           style={{ opacity: btnOpacity, y: btnY }}
           className="absolute bottom-12 z-50 pointer-events-auto"
         >
-          <Link 
+          <NextLink 
             href={ctaHref === "/incubator/pitch" ? "mailto:contact@cezigue.fr" : ctaHref}
             className="bg-primary text-primary-foreground px-8 py-4 rounded-full font-bold text-lg shadow-2xl hover:bg-primary/90 hover:scale-105 transition-all flex items-center space-x-2"
           >
             <span>{ctaText}</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </Link>
+          </NextLink>
         </motion.div>
 
       </div>
