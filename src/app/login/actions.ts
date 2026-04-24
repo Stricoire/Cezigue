@@ -54,7 +54,11 @@ const getURL = () => {
 export async function signInWithProvider(provider: 'google' | 'apple', formData?: FormData) {
   const supabase = await createClient()
   const headersList = await headers()
-  const origin = headersList.get('origin') || getURL()
+  
+  // Vercel et de nombreux reverse proxies garantissent ces headers.
+  const host = headersList.get('x-forwarded-host') || headersList.get('host')
+  const protocol = headersList.get('x-forwarded-proto') || 'https'
+  const origin = host ? `${protocol}://${host}` : getURL()
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: provider,
