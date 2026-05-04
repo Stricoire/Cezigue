@@ -45,15 +45,25 @@ export async function POST(req: Request) {
       mode: mode as 'subscription' | 'payment',
       automatic_tax: { enabled: true }, // Active le calcul automatique de la TVA
       billing_address_collection: 'required', // Obligatoire pour calculer la TVA selon le pays
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/dashboard/billing?success=true`,
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/dashboard/billing/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/pricing?canceled=true`,
       client_reference_id: userId, // CRUCIAL: Permet au webhook de savoir qui a payé !
     };
 
     if (customerId) {
+      // Si l'utilisateur a déjà un Customer ID chez Stripe, on l'utilise
       sessionConfig.customer = customerId;
-    } else if (customerEmail) {
+    } else {
+      // Sinon on pré-remplit l'email
       sessionConfig.customer_email = customerEmail;
+      // Et SI c'est un paiement unique, on oblige Stripe à créer un objet Customer pour l'historique des factures
+      if (mode === 'payment') {
+        sessionConfig.customer_creation = 'always';
+      }
+    }
+
+    if (mode === 'payment') {
+        sessionConfig.invoice_creation = { enabled: true };
     }
 
     const session = await stripe.checkout.sessions.create(sessionConfig);
