@@ -42,7 +42,7 @@ export async function POST(req: Request) {
           quantity: 1,
         },
       ],
-      mode: mode as Stripe.Checkout.SessionCreateParams.Mode,
+      mode: mode as 'subscription' | 'payment',
       automatic_tax: { enabled: true }, // Active le calcul automatique de la TVA
       billing_address_collection: 'required', // Obligatoire pour calculer la TVA selon le pays
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/dashboard/billing?success=true`,
