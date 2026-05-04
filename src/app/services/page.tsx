@@ -134,9 +134,14 @@ export default function ServicesPage() {
          </Link>
          <h1 className="text-2xl font-black tracking-tight text-zinc-900 hidden md:block">Mobilité Péri-rurale</h1>
          {user && (
-           <button onClick={handleLogout} className="text-sm font-bold text-red-600 hover:text-red-800 bg-red-100 hover:bg-red-200 px-4 py-2 rounded-full transition-colors">
-             Se déconnecter
-           </button>
+           <div className="flex items-center gap-3">
+             <Link href="/dashboard/billing" className="text-sm font-bold text-neutral-600 hover:text-primary bg-white border border-neutral-200 hover:border-primary/50 px-4 py-2 rounded-full transition-colors flex items-center gap-2">
+               Abonnement & Facturation
+             </Link>
+             <button onClick={handleLogout} className="text-sm font-bold text-red-600 hover:text-red-800 bg-red-100 hover:bg-red-200 px-4 py-2 rounded-full transition-colors">
+               Se déconnecter
+             </button>
+           </div>
          )}
       </div>
 

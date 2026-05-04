@@ -41,11 +41,16 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ r
 
         <div className="flex items-center gap-3">
           {session ? (
-            <Link href="/services">
-              <Button className="rounded-full tracking-wide font-black px-6 shadow-[0_4px_14px_0_rgba(20,20,20,0.39)] dark:shadow-[0_4px_14px_0_rgba(255,255,255,0.1)] bg-foreground text-background hover:bg-foreground/90 transition-all hover:scale-105">
-                Mon Espace
-              </Button>
-            </Link>
+            <>
+              <Link href="/dashboard/billing" className="text-sm font-bold hover:text-foreground/80 hidden sm:block">
+                Mon Abonnement
+              </Link>
+              <Link href="/services">
+                <Button className="rounded-full tracking-wide font-black px-6 shadow-[0_4px_14px_0_rgba(20,20,20,0.39)] dark:shadow-[0_4px_14px_0_rgba(255,255,255,0.1)] bg-foreground text-background hover:bg-foreground/90 transition-all hover:scale-105">
+                  Mon Espace
+                </Button>
+              </Link>
+            </>
           ) : (
             <>
               <Link href="/login" className="text-sm font-bold hover:text-foreground/80 hidden sm:block">
