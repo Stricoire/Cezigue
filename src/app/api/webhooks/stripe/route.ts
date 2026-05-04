@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import { createClient } from '@supabase/supabase-js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: '2025-02-24.acacia',
+  apiVersion: '2026-04-22.dahlia',
 });
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -17,7 +17,7 @@ const supabaseAdmin = createClient(
 export async function POST(req: Request) {
   try {
     const body = await req.text();
-    const signature = headers().get('stripe-signature') as string;
+    const signature = (await headers()).get('stripe-signature') as string;
 
     let event: Stripe.Event;
 
