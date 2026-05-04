@@ -39,16 +39,17 @@ export async function POST(req: Request) {
         // Le userId a été passé via client_reference_id lors de la création de la session
         const userId = session.client_reference_id;
         const customerId = session.customer as string;
-        const subscriptionId = session.subscription as string;
+        const subscriptionId = session.subscription as string | null;
+        const isLifetime = session.mode === 'payment';
 
         if (userId) {
-          // L'utilisateur vient de s'abonner avec succès, on enregistre son customer_id
+          // L'utilisateur vient de s'abonner avec succès ou d'acheter l'accès à vie
           await supabaseAdmin
             .from('user_preferences')
             .update({
               stripe_customer_id: customerId,
-              stripe_subscription_id: subscriptionId,
-              subscription_status: 'ACTIVE'
+              stripe_subscription_id: subscriptionId || null,
+              subscription_status: isLifetime ? 'LIFETIME' : 'ACTIVE'
             })
             .eq('id', userId);
         }

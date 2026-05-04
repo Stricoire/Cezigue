@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 
 export default function BillingDashboard() {
-  const [subscriptionStatus, setSubscriptionStatus] = useState<"ACTIVE" | "CANCELLED" | "EXPIRED" | "NONE">("NONE");
+  const [subscriptionStatus, setSubscriptionStatus] = useState<"ACTIVE" | "CANCELLED" | "EXPIRED" | "LIFETIME" | "NONE">("NONE");
   const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [isPortalLoading, setIsPortalLoading] = useState(false);
@@ -94,8 +94,13 @@ export default function BillingDashboard() {
                       <CheckCircle2 className="w-3 h-3 mr-1" />
                       Actif
                     </span>
-                  ) : subscriptionStatus === "CANCELLED" ? (
+                  ) : subscriptionStatus === "LIFETIME" ? (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                      <CheckCircle2 className="w-3 h-3 mr-1" />
+                      Accès À Vie
+                    </span>
+                  ) : subscriptionStatus === "CANCELLED" ? (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                       <AlertCircle className="w-3 h-3 mr-1" />
                       En cours de résiliation (Actif jusqu'à la fin de la période)
                     </span>
@@ -127,7 +132,7 @@ export default function BillingDashboard() {
                     ) : (
                       <ExternalLink className="w-4 h-4" />
                     )}
-                    Gérer mon abonnement (Portail)
+                    {subscriptionStatus === "LIFETIME" ? "Accéder à mes factures" : "Gérer mon abonnement (Portail)"}
                   </button>
                 ) : (
                   <Link 

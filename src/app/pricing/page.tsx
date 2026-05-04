@@ -1,17 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { CheckCircle2, ArrowRight, Loader2 } from "lucide-react";
+import { CheckCircle2, ArrowRight, Loader2, Sparkles, Infinity } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
 
 const STRIPE_PRICE_MONTHLY_ID = process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY_ID || "";
 const STRIPE_PRICE_ANNUAL_ID = process.env.NEXT_PUBLIC_STRIPE_PRICE_ANNUAL_ID || "";
+const STRIPE_PRICE_LIFETIME_ID = process.env.NEXT_PUBLIC_STRIPE_PRICE_LIFETIME_ID || "";
 
 export default function PricingPage() {
-  const [isAnnual, setIsAnnual] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -24,31 +24,36 @@ export default function PricingPage() {
     fetchUser();
   }, []);
 
-  const features = [
+  const coreFeatures = [
     "Accès illimité aux microservices",
     "Alertes personnalisées temps réel (Push PWA)",
     "Consultation illimitée du Kiosque (Articles Veille)",
     "Création de portefeuilles de favoris",
-    "30% de réduction sur le développement de vos applications à la demande",
     "Accès anticipé aux fonctionnalités IA",
     "Support prioritaire"
   ];
 
-  const handleSubscribe = async () => {
+  const handleSubscribe = async (priceId: string, planName: string, mode: 'subscription' | 'payment') => {
     if (!userId) {
-      alert("Veuillez vous connecter pour vous abonner.");
+      alert("Veuillez vous connecter pour choisir une offre.");
       window.location.href = "/login?redirect=/pricing";
       return;
     }
 
-    setIsLoading(true);
+    if (!priceId) {
+      alert("Cette offre n'est pas encore configurée.");
+      return;
+    }
+
+    setLoadingPlan(planName);
     try {
       const response = await fetch("/api/checkout/stripe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          priceId: isAnnual ? STRIPE_PRICE_ANNUAL_ID : STRIPE_PRICE_MONTHLY_ID,
+          priceId: priceId,
           userId: userId,
+          mode: mode
         }),
       });
 
@@ -61,13 +66,13 @@ export default function PricingPage() {
     } catch (error) {
       console.error(error);
       alert("Une erreur est survenue.");
-      setIsLoading(false);
+      setLoadingPlan(null);
     }
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col pt-24 pb-12">
-      <div className="max-w-4xl mx-auto px-4 w-full">
+    <div className="min-h-screen bg-background flex flex-col pt-24 pb-12 overflow-x-hidden">
+      <div className="max-w-7xl mx-auto px-4 w-full">
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 mb-4">
@@ -78,82 +83,134 @@ export default function PricingPage() {
           </p>
         </div>
 
-        {/* Toggle Billing */}
-        <div className="flex justify-center mb-12">
-          <div className="bg-white p-1 rounded-full shadow-sm border border-neutral-200 inline-flex">
-            <button
-              onClick={() => setIsAnnual(false)}
-              className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all ${
-                !isAnnual
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50"
-              }`}
-            >
-              Mensuel
-            </button>
-            <button
-              onClick={() => setIsAnnual(true)}
-              className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${
-                isAnnual
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50"
-              }`}
-            >
-              Annuel
-              <span className="bg-secondary text-secondary-foreground text-[10px] px-2 py-0.5 rounded-full font-bold">
-                -40%
-              </span>
-            </button>
-          </div>
-        </div>
+        {/* Pricing Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto items-start">
+          
+          {/* Mensuel */}
+          <div className="bg-white rounded-3xl shadow-lg overflow-hidden border border-neutral-200 flex flex-col h-full hover:shadow-xl transition-shadow">
+            <div className="p-8 flex-grow">
+              <h3 className="text-xl font-bold text-neutral-900 mb-2">Mensuel</h3>
+              <p className="text-sm text-neutral-500 mb-6 min-h-[40px]">Flexibilité totale, sans engagement à long terme.</p>
+              
+              <div className="mb-8 flex items-baseline text-neutral-900">
+                <span className="text-5xl font-extrabold tracking-tight">5€</span>
+                <span className="text-lg font-medium text-neutral-500 ml-1">HT / mois</span>
+              </div>
 
-        {/* Pricing Card */}
-        <div className="max-w-lg mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border border-neutral-100">
-          <div className="p-8 sm:p-10">
-            <h3 className="text-2xl font-bold text-neutral-900 mb-2">Premium</h3>
-            <p className="text-neutral-500 mb-6">Tout ce qu'il vous faut pour une mobilité optimale.</p>
-            
-            <div className="mb-8 flex items-baseline text-neutral-900">
-              <span className="text-5xl font-extrabold tracking-tight">
-                {isAnnual ? "36" : "5"}€
-              </span>
-              <span className="text-xl font-medium text-neutral-500 ml-1">
-                HT / {isAnnual ? "an" : "mois"}
-              </span>
-            </div>
-
-            <ul className="space-y-4 mb-10">
-              {features.map((feature, idx) => (
-                <li key={idx} className="flex items-start">
-                  <CheckCircle2 className="h-6 w-6 text-emerald-500 shrink-0 mr-3" />
-                  <span className="text-neutral-700">{feature}</span>
+              <ul className="space-y-4 mb-8">
+                {coreFeatures.map((feature, idx) => (
+                  <li key={idx} className="flex items-start text-sm">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mr-3" />
+                    <span className="text-neutral-700">{feature}</span>
+                  </li>
+                ))}
+                <li className="flex items-start text-sm font-semibold bg-neutral-50 p-2 rounded-lg border border-neutral-100">
+                  <Sparkles className="h-5 w-5 text-amber-500 shrink-0 mr-3" />
+                  <span className="text-neutral-900">5% de réduction sur vos Apps sur-mesure</span>
                 </li>
-              ))}
-            </ul>
-
-            <button
-              onClick={handleSubscribe}
-              disabled={isLoading || !STRIPE_PRICE_MONTHLY_ID}
-              className="w-full py-4 px-6 rounded-xl bg-foreground text-background font-bold text-lg hover:bg-foreground/90 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-            >
-              {isLoading ? (
-                <Loader2 className="w-6 h-6 animate-spin" />
-              ) : (
-                "S'abonner"
-              )}
-            </button>
-
-            <div className="mt-6 text-center text-sm text-neutral-500">
-              Paiement 100% sécurisé via Stripe. Sans engagement.
+              </ul>
+            </div>
+            <div className="p-8 pt-0 mt-auto">
+              <button
+                onClick={() => handleSubscribe(STRIPE_PRICE_MONTHLY_ID, 'mensuel', 'subscription')}
+                disabled={loadingPlan !== null || !STRIPE_PRICE_MONTHLY_ID}
+                className="w-full py-3 px-6 rounded-xl bg-neutral-100 text-neutral-900 font-bold hover:bg-neutral-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              >
+                {loadingPlan === 'mensuel' ? <Loader2 className="w-5 h-5 animate-spin" /> : "S'abonner"}
+              </button>
             </div>
           </div>
+
+          {/* Annuel (Highlighted) */}
+          <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border-2 border-secondary relative flex flex-col h-full transform md:-translate-y-4">
+            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-primary via-secondary to-primary"></div>
+            <div className="absolute top-4 right-4">
+              <span className="bg-secondary text-secondary-foreground text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                Populaire
+              </span>
+            </div>
+            <div className="p-8 flex-grow">
+              <h3 className="text-2xl font-bold text-neutral-900 mb-2">Annuel</h3>
+              <p className="text-sm text-neutral-500 mb-6 min-h-[40px]">Le meilleur choix pour s'engager sur la durée avec une belle économie.</p>
+              
+              <div className="mb-2 flex items-baseline text-neutral-900">
+                <span className="text-5xl font-extrabold tracking-tight">36€</span>
+                <span className="text-lg font-medium text-neutral-500 ml-1">HT / an</span>
+              </div>
+              <div className="mb-8 text-sm text-emerald-600 font-semibold bg-emerald-50 inline-block px-3 py-1 rounded-full">
+                Soit 3€ / mois (40% d'économie)
+              </div>
+
+              <ul className="space-y-4 mb-8">
+                {coreFeatures.map((feature, idx) => (
+                  <li key={idx} className="flex items-start text-sm">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mr-3" />
+                    <span className="text-neutral-700">{feature}</span>
+                  </li>
+                ))}
+                <li className="flex items-start text-sm font-bold bg-amber-50 p-2.5 rounded-lg border border-amber-200">
+                  <Sparkles className="h-5 w-5 text-amber-600 shrink-0 mr-3" />
+                  <span className="text-amber-900">25% de réduction sur vos Apps sur-mesure</span>
+                </li>
+              </ul>
+            </div>
+            <div className="p-8 pt-0 mt-auto">
+              <button
+                onClick={() => handleSubscribe(STRIPE_PRICE_ANNUAL_ID, 'annuel', 'subscription')}
+                disabled={loadingPlan !== null || !STRIPE_PRICE_ANNUAL_ID}
+                className="w-full py-4 px-6 rounded-xl bg-foreground text-background font-bold text-lg hover:bg-foreground/90 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              >
+                {loadingPlan === 'annuel' ? <Loader2 className="w-6 h-6 animate-spin" /> : "S'abonner"}
+              </button>
+            </div>
+          </div>
+
+          {/* À Vie */}
+          <div className="bg-neutral-900 text-white rounded-3xl shadow-xl overflow-hidden border border-neutral-800 flex flex-col h-full hover:shadow-2xl transition-shadow">
+            <div className="p-8 flex-grow">
+              <div className="flex items-center gap-2 mb-2">
+                <Infinity className="w-6 h-6 text-emerald-400" />
+                <h3 className="text-xl font-bold text-white">À Vie</h3>
+              </div>
+              <p className="text-sm text-neutral-400 mb-6 min-h-[40px]">Un accès illimité, pour toujours. Sans abonnement.</p>
+              
+              <div className="mb-8 flex items-baseline text-white">
+                <span className="text-5xl font-extrabold tracking-tight">100€</span>
+                <span className="text-lg font-medium text-neutral-400 ml-1">HT / une fois</span>
+              </div>
+
+              <ul className="space-y-4 mb-8">
+                {coreFeatures.map((feature, idx) => (
+                  <li key={idx} className="flex items-start text-sm">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mr-3" />
+                    <span className="text-neutral-300">{feature}</span>
+                  </li>
+                ))}
+                <li className="flex items-start text-sm font-bold bg-neutral-800 p-2.5 rounded-lg border border-neutral-700">
+                  <Sparkles className="h-5 w-5 text-amber-400 shrink-0 mr-3" />
+                  <span className="text-amber-100">40% de réduction sur vos Apps sur-mesure</span>
+                </li>
+              </ul>
+            </div>
+            <div className="p-8 pt-0 mt-auto">
+              <button
+                onClick={() => handleSubscribe(STRIPE_PRICE_LIFETIME_ID, 'lifetime', 'payment')}
+                disabled={loadingPlan !== null || !STRIPE_PRICE_LIFETIME_ID}
+                className="w-full py-3 px-6 rounded-xl bg-white text-neutral-900 font-bold hover:bg-neutral-100 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              >
+                {loadingPlan === 'lifetime' ? <Loader2 className="w-5 h-5 animate-spin" /> : "Obtenir l'accès à vie"}
+              </button>
+            </div>
+          </div>
+
         </div>
 
-        <div className="text-center mt-12">
-           <Link href="/services" className="text-neutral-500 hover:text-neutral-900 flex items-center justify-center gap-2 transition-colors">
-              <ArrowRight className="h-4 w-4 rotate-180" />
-              Retourner aux services gratuits
-           </Link>
+        <div className="text-center mt-16">
+          <p className="text-sm text-neutral-500 mb-6">Paiement 100% sécurisé via Stripe.</p>
+          <Link href="/services" className="text-neutral-500 hover:text-neutral-900 inline-flex items-center gap-2 transition-colors">
+            <ArrowRight className="h-4 w-4 rotate-180" />
+            Retourner aux services gratuits
+          </Link>
         </div>
       </div>
     </div>

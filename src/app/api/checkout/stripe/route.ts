@@ -14,7 +14,7 @@ const supabaseAdmin = createClient(
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { priceId, userId } = body;
+    const { priceId, userId, mode = 'subscription' } = body;
 
     if (!priceId || !userId) {
       return NextResponse.json({ error: 'Missing priceId or userId' }, { status: 400 });
@@ -42,7 +42,9 @@ export async function POST(req: Request) {
           quantity: 1,
         },
       ],
-      mode: 'subscription',
+      mode: mode as Stripe.Checkout.SessionCreateParams.Mode,
+      automatic_tax: { enabled: true }, // Active le calcul automatique de la TVA
+      billing_address_collection: 'required', // Obligatoire pour calculer la TVA selon le pays
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/dashboard/billing?success=true`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/pricing?canceled=true`,
       client_reference_id: userId, // CRUCIAL: Permet au webhook de savoir qui a payé !
