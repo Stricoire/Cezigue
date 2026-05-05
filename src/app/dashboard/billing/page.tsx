@@ -44,7 +44,7 @@ export default function BillingDashboard() {
       const data = await response.json();
       
       if (data.url) {
-        window.location.href = data.url;
+        window.open(data.url, '_blank');
       } else {
         alert(data.error || "Erreur lors de l'accès au portail de facturation.");
       }

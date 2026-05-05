@@ -9,8 +9,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Cezigue - Mobility AI Hub",
-  description: "The all in one platform dedicated to the future mobilities.",
+  title: "Cezigue - Votre portail des mobilités",
+  description: "Cezigue - Votre portail des mobilités",
 };
 
 export default function RootLayout({

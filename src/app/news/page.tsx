@@ -135,7 +135,7 @@ export default async function NewsPage({ searchParams }: { searchParams: Promise
                 
                 <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
                   <span>{new Date(cluster.articles[0].created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
-                  <Link href={`/incubator/pitch?concept=${encodeURIComponent(headerTitle)}`} className="inline-flex items-center justify-center px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg shadow-sm text-sm font-bold transition-all">
+                  <Link href={`/incubator/pitch?concept=${encodeURIComponent(headerTitle)}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg shadow-sm text-sm font-bold transition-all">
                     S'inspirer de cette idée
                   </Link>
                 </div>
