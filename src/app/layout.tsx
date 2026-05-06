@@ -34,7 +34,8 @@ export default function RootLayout({
           <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between text-sm text-muted-foreground">
             <p>© {new Date().getFullYear()} Cezigue (ANTCHOUSKI !). Tous droits réservés.</p>
             <div className="flex items-center gap-4 mt-4 sm:mt-0">
-              <a href="/cgv" className="hover:text-foreground transition-colors">CGV & CGU</a>
+              <a href="/cgu" className="hover:text-foreground transition-colors">CGU</a>
+              <a href="/cgv" className="hover:text-foreground transition-colors">CGV</a>
               <a href="/mentions-legales" className="hover:text-foreground transition-colors">Mentions Légales</a>
             </div>
           </div>
