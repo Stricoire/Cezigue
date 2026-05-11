@@ -21,7 +21,7 @@ async function checkIngestion() {
   // Check articles
   const { data: articles, error: errArt } = await supabase
     .from('articles_veille')
-    .select('id, theme, created_at')
+    .select('id, tags, created_at')
     .gte('created_at', isoYesterday);
 
   // Check POI unified
