@@ -134,7 +134,7 @@ export default function LocalActivityRadar({
     const fetchPOIs = async () => {
       setIsLoading(true);
       try {
-        const catQuery = debouncedFilters.categories.length > 0 ? debouncedFilters.categories.join(',') : 'none';
+        const catQuery = debouncedFilters.categories.length > 0 ? encodeURIComponent(debouncedFilters.categories.join(',')) : 'none';
         let url = `/api/poi?lat=${lat}&lon=${lon}&insee=${insee}&radius=${debouncedRadius}&categories=${catQuery}`;
         if (debouncedFilters.startDate) url += `&start=${debouncedFilters.startDate}`;
         if (debouncedFilters.endDate) url += `&end=${debouncedFilters.endDate}`;
