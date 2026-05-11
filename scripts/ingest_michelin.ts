@@ -49,53 +49,84 @@ async function run() {
       return;
   }
 
-  // 4. Upsert dans raw_michelin
-  console.log("💾 Insertion dans la couche Bronze (raw_michelin)...");
+  // 4. Upsert dans raw_michelin et unified_pois (Par lots pour éviter les timeouts)
+  console.log("💾 Insertion dans la couche Bronze (raw_michelin) et Silver (unified_pois)...");
   
   const batchSize = 500;
   let insertedCount = 0;
   
   for (let i = 0; i < frenchRecords.length; i += batchSize) {
-    const batch = frenchRecords.slice(i, i + batchSize).map((r: any) => {
+    const rawBatch: any[] = [];
+    const unifiedBatch: any[] = [];
+
+    frenchRecords.slice(i, i + batchSize).forEach((r: any) => {
+        const lat = parseFloat(r.Latitude);
+        const lon = parseFloat(r.Longitude);
+        
+        if (isNaN(lat) || isNaN(lon)) return;
+
         // Generate a unique source ID from Name + lat + lon
-        const sourceId = Buffer.from(`${r.Name}_${r.Latitude}_${r.Longitude}`).toString('base64');
-        return {
+        const sourceId = Buffer.from(`${r.Name}_${lat}_${lon}`).toString('base64');
+        
+        rawBatch.push({
             source_id: sourceId,
             name: r.Name,
             address: r.Address,
             city: r.Location.split(',')[0].trim(),
             price: r.Price,
             cuisine: r.Cuisine,
-            lat: parseFloat(r.Latitude),
-            lon: parseFloat(r.Longitude),
+            lat: lat,
+            lon: lon,
             award: r.Award,
             url: r.Url,
             description: r.Description
-        };
+        });
+
+        let type = 'restaurant';
+        if (/Etoile|Étoile|Star/i.test(r.Award)) type = 'michelin_starred';
+        else if (/Bib/i.test(r.Award)) type = 'michelin_bib';
+
+        unifiedBatch.push({
+            source_id: `michelin:${sourceId}`,
+            source: 'MICHELIN',
+            categories: ['Restauration'],
+            title: r.Name,
+            type: type,
+            lat: lat,
+            lon: lon,
+            address: r.Address,
+            city: r.Location.split(',')[0].trim(),
+            description: r.Description,
+            metadata: {
+                award: r.Award,
+                cuisine: r.Cuisine,
+                price: r.Price,
+                url: r.Url
+            }
+        });
     });
 
-    const { error } = await supabase
+    const { error: rawErr } = await supabase
       .from('raw_michelin')
-      .upsert(batch, { onConflict: 'source_id' });
+      .upsert(rawBatch, { onConflict: 'source_id' });
 
-    if (error) {
-      console.error(`❌ Erreur lors de l'insertion (batch ${i}):`, error.message);
-    } else {
-      insertedCount += batch.length;
-      console.log(`   -> ${insertedCount} restaurants insérés...`);
+    if (rawErr) {
+      console.error(`❌ Erreur raw_michelin (batch ${i}):`, rawErr.message);
     }
+
+    const { error: uniErr } = await supabase
+      .from('unified_pois')
+      .upsert(unifiedBatch, { onConflict: 'source_id' });
+
+    if (uniErr) {
+      console.error(`❌ Erreur unified_pois (batch ${i}):`, uniErr.message);
+    }
+
+    insertedCount += rawBatch.length;
+    console.log(`   -> ${insertedCount} restaurants insérés (Bronze & Silver)...`);
   }
   
-  console.log("✅ Ingestion Bronze terminée.");
-  
-  // 5. Sync to Gold
-  console.log("🔄 Synchronisation vers la couche Gold (unified_pois)...");
-  const { error: syncError } = await supabase.rpc('sync_expert_pois_to_unified');
-  if (syncError) {
-      console.error("❌ Erreur lors de la synchronisation vers unified_pois:", syncError.message);
-  } else {
-      console.log("✅ Synchronisation réussie. Les restaurants étoilés sont désormais disponibles pour l'Agent !");
-  }
+  console.log("✅ Ingestion Bronze & Silver (Unified POI) terminée sans erreur !");
 }
 
 run().catch(console.error);
