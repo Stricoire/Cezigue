@@ -135,8 +135,14 @@ export default function ServicesPage() {
          <h1 className="text-2xl font-black tracking-tight text-zinc-900 hidden md:block">Mobilité Péri-rurale</h1>
          {user && (
            <div className="flex items-center gap-3">
+             <Link href="/dashboard/studio" className="text-sm font-bold text-white bg-primary hover:bg-primary/90 px-4 py-2 rounded-full transition-colors flex items-center gap-2 shadow-sm">
+               ✨ Studio IA
+             </Link>
+             <Link href="/dashboard/mes-services" className="text-sm font-bold text-primary bg-primary/10 hover:bg-primary/20 px-4 py-2 rounded-full transition-colors flex items-center gap-2">
+               Mes Services
+             </Link>
              <Link href="/dashboard/billing" className="text-sm font-bold text-neutral-600 hover:text-primary bg-white border border-neutral-200 hover:border-primary/50 px-4 py-2 rounded-full transition-colors flex items-center gap-2">
-               Abonnement & Facturation
+               Abonnement
              </Link>
              <button onClick={handleLogout} className="text-sm font-bold text-red-600 hover:text-red-800 bg-red-100 hover:bg-red-200 px-4 py-2 rounded-full transition-colors">
                Se déconnecter
