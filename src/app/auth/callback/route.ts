@@ -14,6 +14,8 @@ export async function GET(request: Request) {
     
     if (!error) {
       return NextResponse.redirect(new URL(next, request.url))
+    } else {
+      console.error("Auth Callback Error:", error);
     }
   }
 

@@ -68,6 +68,7 @@ export async function signInWithProvider(provider: 'google' | 'apple', formData?
   })
 
   if (error) {
+    console.error("OAuth Sign In Error:", error);
     redirect('/login?error=true')
   }
 

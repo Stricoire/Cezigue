@@ -19,7 +19,7 @@ function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
 }
 
-export default function TravelPlanner({ user, locationData, maximized }: { user: any, locationData: any, maximized?: boolean }) {
+export default function TravelPlanner({ user, locationData, maximized, defaultSearchKeyword }: { user?: any, locationData?: any, maximized?: boolean, defaultSearchKeyword?: string }) {
   const supabase = createClient();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -114,7 +114,8 @@ export default function TravelPlanner({ user, locationData, maximized }: { user:
           initialFuelLevel,
           dates,
           tripType,
-          tastes
+          tastes,
+          searchKeyword: defaultSearchKeyword
         })
       });
 

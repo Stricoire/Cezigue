@@ -1,120 +1,149 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Loader2, MapPin } from 'lucide-react';
+import { ArrowRight, Settings2, MapPin } from 'lucide-react';
 
-const LocalActivityMap = dynamic(() => import("@/components/LocalActivityMap"), { ssr: false });
+const AddressInput = dynamic(() => import("@/components/AddressInput"), { ssr: false });
+const AutocompleteInput = dynamic(() => import("@/components/AutocompleteInput"), { ssr: false });
+const LocalActivityRadar = dynamic(() => import("@/components/LocalActivityRadar"), { ssr: false });
+const RoutePlanner = dynamic(() => import("@/components/RoutePlanner"), { ssr: false });
+const TravelPlanner = dynamic(() => import("@/components/TravelPlanner"), { ssr: false });
 
 export function ServiceRenderer({ service }: { service: any }) {
-  const [pois, setPois] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [hasContext, setHasContext] = useState(false);
   
-  // Défaut : Centre de la France
-  const [center, setCenter] = useState<[number, number]>([46.2276, 2.2137]);
+  // Context State
+  const [contextLat, setContextLat] = useState<string>("");
+  const [contextLon, setContextLon] = useState<string>("");
+  const [contextRadius, setContextRadius] = useState<number>(service.config_json.radius || 5000);
+  const [contextOrigin, setContextOrigin] = useState<string>("");
+  const [contextDest, setContextDest] = useState<string>("");
 
-  useEffect(() => {
-    // 1. Essayer de récupérer la position de l'utilisateur
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          setCenter([pos.coords.latitude, pos.coords.longitude]);
-          fetchData(pos.coords.latitude, pos.coords.longitude);
-        },
-        () => {
-          // Fallback Paris
-          const defaultLat = 48.8566;
-          const defaultLon = 2.3522;
-          setCenter([defaultLat, defaultLon]);
-          fetchData(defaultLat, defaultLon);
-        }
-      );
-    } else {
-      fetchData(center[0], center[1]);
-    }
-  }, []);
+  const baseTool = service.config_json.base_tool || 'events';
 
-  const fetchData = async (lat: number, lon: number) => {
-    try {
-      const { categories, radius } = service.config_json;
-      let url = `/api/poi?lat=${lat}&lon=${lon}&radius=${radius || 5000}`;
-      
-      if (categories && categories.length > 0) {
-        url += `&categories=${categories.join(',')}`;
-      }
+  if (baseTool === 'travel-planner') {
+    return (
+      <div className="w-full h-full bg-card rounded-3xl border border-border shadow-sm p-4 md:p-8">
+        <div className="mb-8">
+          <h2 className="text-2xl font-black text-foreground">{service.title}</h2>
+          <p className="text-muted-foreground mt-2">{service.description}</p>
+          {service.config_json.search_keyword && (
+             <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-200">
+               Filtre IA Actif : "{service.config_json.search_keyword}"
+             </div>
+          )}
+        </div>
+        <TravelPlanner defaultSearchKeyword={service.config_json.search_keyword} />
+      </div>
+    );
+  }
 
-      const res = await fetch(url);
-      const data = await res.json();
 
-      if (!res.ok) throw new Error(data.error || "Erreur de récupération des données");
-
-      setPois(data.pois || []);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+  const handleLocationFound = (data: any) => {
+    setContextLat(data.lat);
+    setContextLon(data.lon);
   };
 
-  if (loading) {
+  const executeService = () => {
+     setHasContext(true);
+  };
+
+  // 1ère étape : Mise en Contexte
+  if (!hasContext) {
     return (
-      <div className="h-[600px] w-full bg-card rounded-3xl border border-border/40 flex items-center justify-center flex-col gap-4 shadow-sm">
-        <Loader2 className="w-12 h-12 animate-spin text-primary" />
-        <p className="text-muted-foreground font-medium animate-pulse">Initialisation du service sur-mesure...</p>
+      <div className="flex flex-col gap-6 max-w-2xl mx-auto mt-10 w-full px-4">
+         <div className="text-center space-y-2 mb-4">
+            <h1 className="text-3xl font-black text-foreground">{service.title}</h1>
+            <p className="text-muted-foreground">{service.description}</p>
+         </div>
+
+         <div className="bg-card p-6 md:p-8 rounded-3xl border border-border shadow-xl relative overflow-hidden">
+            {/* Decors */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
+
+            { (baseTool === 'events' || baseTool === 'fuel') && (
+               <div className="space-y-6 relative z-10">
+                 <div className="flex items-center gap-2 mb-2 text-primary">
+                    <MapPin className="w-5 h-5" />
+                    <h3 className="font-bold text-lg">Zone d'analyse</h3>
+                 </div>
+                 
+                 <AddressInput onLocationFound={handleLocationFound} placeholder="Où souhaitez-vous chercher ?" />
+                 
+                 <div className="flex flex-col gap-2 pt-4 bg-muted/30 p-4 rounded-xl border border-border/50">
+                   <div className="flex justify-between items-center text-sm font-bold text-muted-foreground">
+                     <span className="flex items-center gap-2"><Settings2 className="w-4 h-4" /> Rayon de recherche</span>
+                     <span className="text-foreground">{contextRadius / 1000} km</span>
+                   </div>
+                   <input type="range" min="1000" max="50000" step="1000" value={contextRadius} onChange={e => setContextRadius(parseInt(e.target.value))} className="w-full accent-primary mt-2" />
+                 </div>
+
+                 <button 
+                   onClick={executeService} 
+                   disabled={!contextLat}
+                   className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-bold text-lg shadow-md hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
+                 >
+                   Démarrer le service <ArrowRight className="w-5 h-5" />
+                 </button>
+               </div>
+            )}
+
+            { baseTool === 'multimodal' && (
+               <div className="space-y-6 relative z-10">
+                 <div className="flex items-center gap-2 mb-2 text-primary">
+                    <MapPin className="w-5 h-5" />
+                    <h3 className="font-bold text-lg">Votre Trajet</h3>
+                 </div>
+
+                 <div className="space-y-4 relative bg-muted/30 p-4 rounded-xl border border-border/50">
+                   <div className="absolute left-10 top-10 bottom-10 w-0.5 bg-border z-0" />
+                   <AutocompleteInput value={contextOrigin} onChange={setContextOrigin} placeholder="Point de départ" className="z-10 relative" />
+                   <AutocompleteInput value={contextDest} onChange={setContextDest} placeholder="Point d'arrivée" icon={<MapPin className="w-5 h-5 text-primary" />} className="z-10 relative" />
+                 </div>
+                 
+                 <button 
+                   onClick={executeService} 
+                   disabled={!contextOrigin || !contextDest}
+                   className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-bold text-lg shadow-md hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
+                 >
+                   Planifier <ArrowRight className="w-5 h-5" />
+                 </button>
+               </div>
+            )}
+         </div>
       </div>
     );
   }
 
-  if (error) {
-    return (
-      <div className="p-8 text-center bg-red-500/10 text-red-500 rounded-xl border border-red-500/30">
-        Erreur d'exécution du micro-service : {error}
-      </div>
-    );
-  }
-
-  const isMap = service.config_json.type === 'map';
-
+  // 2ème étape : Rendu du Service (Moteur natif instancié avec les params de l'IA)
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between bg-card p-6 rounded-2xl border border-border/40 shadow-sm">
-        <div>
-          <h2 className="text-xl font-black text-foreground">{service.title}</h2>
-          <p className="text-sm text-muted-foreground mt-1">{service.description}</p>
-        </div>
-        <div className="flex flex-col items-end gap-1">
-          <span className="text-xs font-bold px-3 py-1 bg-primary/10 text-primary rounded-full uppercase tracking-wider">
-            {pois.length} Résultats
-          </span>
-          <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">
-            Rayon : {(service.config_json.radius || 5000) / 1000} km
-          </span>
-        </div>
-      </div>
+    <div className="flex flex-col gap-4 h-full w-full">
+       <div className="flex items-center justify-between bg-card p-4 md:p-6 rounded-2xl border border-border shadow-sm">
+         <div>
+           <h2 className="text-xl font-black text-foreground">{service.title}</h2>
+           <p className="text-sm text-muted-foreground mt-1">{service.description}</p>
+         </div>
+         <button onClick={() => setHasContext(false)} className="text-xs font-bold px-4 py-2 bg-muted text-muted-foreground hover:bg-neutral-200 rounded-lg transition-colors">
+            Modifier la recherche
+         </button>
+       </div>
 
-      {isMap ? (
-        <div className="h-[600px] w-full rounded-3xl overflow-hidden border-2 border-border shadow-md relative z-0">
-           <LocalActivityMap pois={pois} center={center} />
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {pois.map((poi, idx) => (
-            <div key={idx} className="bg-card p-4 rounded-xl border border-border/40 flex flex-col gap-2 shadow-sm hover:shadow-md transition-shadow">
-              <h3 className="font-bold text-foreground text-sm line-clamp-1">{poi.name || "Lieu sans nom"}</h3>
-              <p className="text-xs text-muted-foreground line-clamp-2">{(poi.tags && poi.tags.description) || "Aucune description"}</p>
-              <div className="mt-auto flex items-center justify-between pt-2">
-                <span className="text-[10px] uppercase font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                  {poi.type || "POI"}
-                </span>
-                <span className="text-xs text-muted-foreground flex items-center gap-1 font-medium">
-                  <MapPin className="w-3 h-3" /> {(poi.distance / 1000).toFixed(1)} km
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+       <div className="flex-1 bg-card rounded-2xl border border-border overflow-hidden">
+         { baseTool === 'multimodal' ? (
+            <RoutePlanner initialOrigin={contextOrigin} externalDestination={contextDest} />
+         ) : (
+            <LocalActivityRadar 
+               insee={"75056"} // FIXME: We might need real insee, but for generic POI radar, it's bypassed if lat/lon is ok
+               lat={contextLat} 
+               lon={contextLon} 
+               defaultRadius={contextRadius / 1000} 
+               lockedCategories={service.config_json.categories}
+               hideFilters={true}
+               isMaximized={true}
+            />
+         )}
+       </div>
     </div>
   );
 }

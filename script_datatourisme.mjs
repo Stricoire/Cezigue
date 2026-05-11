@@ -122,7 +122,8 @@ async function run() {
                        description: description,
                        city: city,
                        start_date: startDate ? new Date(startDate).toISOString() : null,
-                       end_date: endDate ? new Date(endDate).toISOString() : null
+                       end_date: endDate ? new Date(endDate).toISOString() : null,
+                       metadata: poi
                    });
                 }
             } catch (subErr) {

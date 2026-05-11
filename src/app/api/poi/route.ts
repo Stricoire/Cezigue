@@ -5,7 +5,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const lat = searchParams.get('lat');
   const lon = searchParams.get('lon');
-  const radius = parseInt(searchParams.get('radius') || '15', 10);
+  const radiusParam = parseInt(searchParams.get('radius') || '15', 10);
   
   const rawCategories = searchParams.get('categories');
   const categories = rawCategories ? rawCategories.split(',') : [];
@@ -14,7 +14,8 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Lat/Lon manquants' }, { status: 400 });
   }
 
-  const radiusMeters = radius * 1000;
+  // Si le rayon est supérieur à 200, on assume qu'il est déjà en mètres (généré par l'IA), sinon en km
+  const radiusMeters = radiusParam > 200 ? radiusParam : radiusParam * 1000;
   
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -44,6 +45,9 @@ export async function GET(request: Request) {
         categories.forEach((cat: string) => {
             if (metaToDbMap[cat]) {
                 dbCategoriesFilter.push(...metaToDbMap[cat]);
+            } else {
+                // Pour les tags personnalisés générés par l'IA
+                dbCategoriesFilter.push(cat);
             }
         });
         dbCategoriesFilter = Array.from(new Set(dbCategoriesFilter)); // Dédoublonnage
@@ -124,9 +128,14 @@ export async function GET(request: Request) {
         };
     });
 
-    // Filtrage local par méta-catégories (taxonomie)
+    // Filtrage local par méta-catégories (taxonomie) ou tags directs
     if (categories.length > 0 && !categories.includes('none')) {
-        mappedPois = mappedPois.filter((poi: any) => categories.includes(poi.metaCategory));
+        mappedPois = mappedPois.filter((poi: any) => {
+            if (categories.includes(poi.metaCategory)) return true;
+            if (poi.categories?.some((c: string) => categories.includes(c))) return true;
+            if (categories.includes(poi.type)) return true;
+            return false;
+        });
     }
 
     // Tri par distance croissante
@@ -157,10 +166,10 @@ export async function GET(request: Request) {
     // Re-trier le résultat final par distance (car les overflow ont été ajoutés à la fin)
     diversePois.sort((a: any, b: any) => a.rawDist - b.rawDist);
 
-    return NextResponse.json({ lat, lon, radius, events: diversePois.slice(0, 400) });
+    return NextResponse.json({ lat, lon, radius: radiusParam, events: diversePois.slice(0, 400) });
 
-  } catch (err) {
+  } catch (err: any) {
       console.error("Critical POI fetch error:", err);
-      return NextResponse.json({ error: "Service indisponible" }, { status: 500 });
+      return NextResponse.json({ error: err.message || "Service indisponible", stack: err.stack }, { status: 500 });
   }
 }

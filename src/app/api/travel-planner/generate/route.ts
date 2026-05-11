@@ -52,7 +52,7 @@ const TASTE_MAPPING: Record<string, string[]> = {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { startLocation, destination, viaWaypoint, vehicleType, fuelType, tankCapacity, initialFuelLevel, tastes, tripType } = body;
+    const { startLocation, destination, viaWaypoint, vehicleType, fuelType, tankCapacity, initialFuelLevel, tastes, tripType, searchKeyword } = body;
 
     if (!startLocation || !destination) {
       return NextResponse.json({ error: "Départ et destination requis." }, { status: 400 });
@@ -275,7 +275,8 @@ export async function POST(request: Request) {
           p_lat: wp.lat,
           p_lon: wp.lon,
           p_radius_meters: radiusMeters,
-          p_categories: dbCategoriesFilter.length > 0 ? dbCategoriesFilter : null // Filtrage en amont dans la BDD
+          p_categories: dbCategoriesFilter.length > 0 ? dbCategoriesFilter : null, // Filtrage en amont dans la BDD
+          p_search_query: searchKeyword || null
       });
 
       if (!error && unifiedPois) {

@@ -24,6 +24,9 @@ export default function ServicesPage() {
   const [activeWidgets, setActiveWidgets] = useState<string[]>(['fuel']);
   const [maximizedWidget, setMaximizedWidget] = useState<string | null>(null);
   const [defaultRadius, setDefaultRadius] = useState<number>(15);
+  
+  const [viewMode, setViewMode] = useState<'native' | 'custom'>('native');
+  const [customServices, setCustomServices] = useState<any[]>([]);
 
   const [routeDestination, setRouteDestination] = useState<string>("");
 
@@ -40,7 +43,11 @@ export default function ServicesPage() {
   useEffect(() => {
     const initSpace = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (user) setUser(user);
+      if (user) {
+        setUser(user);
+        const { data: mServices } = await supabase.from('user_microservices').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+        if (mServices) setCustomServices(mServices);
+      }
 
       if (user) {
         const { data: prefs } = await supabase.from('user_preferences').select('*').eq('id', user.id).single();
@@ -73,6 +80,18 @@ export default function ServicesPage() {
     };
     initSpace();
   }, []);
+
+  const handleDeleteService = async (id: string) => {
+    if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce micro-service ?")) return;
+    
+    try {
+      const res = await fetch(`/api/microservices/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error("Erreur serveur");
+      setCustomServices(prev => prev.filter(s => s.id !== id));
+    } catch (err) {
+      alert("Impossible de supprimer le service.");
+    }
+  };
 
   const toggleWidget = async (id: string) => {
     let newWidgets;
@@ -170,37 +189,94 @@ export default function ServicesPage() {
       <div className="w-full max-w-5xl z-50 mb-8">
         <AddressInput onLocationFound={handleLocationFound} />
       </div>
+
+      {/* View Toggle */}
+      {locationData?.lat && locationData?.lon && user && (
+        <div className="w-full max-w-7xl mb-6 flex justify-center">
+          <div className="bg-white p-1 rounded-full shadow-sm border border-border/50 inline-flex">
+            <button 
+              onClick={() => setViewMode('native')}
+              className={`px-6 py-2 rounded-full text-sm font-bold transition-colors ${viewMode === 'native' ? 'bg-primary text-white shadow' : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              Les services Cézigue
+            </button>
+            <button 
+              onClick={() => setViewMode('custom')}
+              className={`px-6 py-2 rounded-full text-sm font-bold transition-colors ${viewMode === 'custom' ? 'bg-primary text-white shadow' : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              Mes micro-services
+            </button>
+          </div>
+        </div>
+      )}
       
       {/* Tool Selection */}
       {locationData?.lat && locationData?.lon && (
         <div className="w-full max-w-7xl mb-12">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
-            {widgetsList.map(widget => {
-              const isActive = activeWidgets.includes(widget.id);
-              return (
-                <button
-                  key={widget.id}
-                  onClick={() => toggleWidget(widget.id)}
-                  className={`relative overflow-hidden rounded-2xl shadow-sm border-2 transition-all duration-300 text-left group ${isActive ? 'border-primary shadow-md' : 'border-transparent border-zinc-200/60 hover:border-zinc-300'}`}
-                >
-                  <div className="relative w-full h-24 md:h-32 bg-white/50">
-                    <Image src={widget.image} alt={widget.title} fill className={`object-cover transition-transform duration-500 ${isActive ? 'scale-105' : 'group-hover:scale-105'}`} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute bottom-3 left-3 flex items-center gap-2">
-                      <div className="bg-white p-1.5 rounded-full shadow-sm">
-                        {widget.icon}
+          {viewMode === 'native' ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+              {widgetsList.map(widget => {
+                const isActive = activeWidgets.includes(widget.id);
+                return (
+                  <button
+                    key={widget.id}
+                    onClick={() => toggleWidget(widget.id)}
+                    className={`relative overflow-hidden rounded-2xl shadow-sm border-2 transition-all duration-300 text-left group ${isActive ? 'border-primary shadow-md' : 'border-transparent border-zinc-200/60 hover:border-zinc-300'}`}
+                  >
+                    <div className="relative w-full h-24 md:h-32 bg-white/50">
+                      <Image src={widget.image} alt={widget.title} fill className={`object-cover transition-transform duration-500 ${isActive ? 'scale-105' : 'group-hover:scale-105'}`} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      <div className="absolute bottom-3 left-3 flex items-center gap-2">
+                        <div className="bg-white p-1.5 rounded-full shadow-sm">
+                          {widget.icon}
+                        </div>
+                        <span className="text-white font-bold text-sm drop-shadow-md leading-tight">{widget.title}</span>
                       </div>
-                      <span className="text-white font-bold text-sm drop-shadow-md leading-tight">{widget.title}</span>
+                      {/* Checkbox Icon */}
+                      <div className={`absolute top-3 right-3 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isActive ? 'bg-primary border-primary' : 'bg-black/20 border-white/80'}`}>
+                        {isActive && <div className="w-2.5 h-2.5 bg-white rounded-full" />}
+                      </div>
                     </div>
-                    {/* Checkbox Icon */}
-                    <div className={`absolute top-3 right-3 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isActive ? 'bg-primary border-primary' : 'bg-black/20 border-white/80'}`}>
-                      {isActive && <div className="w-2.5 h-2.5 bg-white rounded-full" />}
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+              {customServices.length === 0 && (
+                <div className="col-span-full py-12 text-center text-muted-foreground">
+                  Vous n'avez pas encore créé de micro-services.
+                  <br/>
+                  <Link href="/dashboard/studio" className="text-primary hover:underline font-bold mt-2 inline-block">Créer mon premier service</Link>
+                </div>
+              )}
+              {customServices.map(service => (
+                <div key={service.id} className="relative overflow-hidden rounded-2xl shadow-sm border-2 border-transparent border-zinc-200/60 hover:border-zinc-300 transition-all duration-300 group flex flex-col bg-white">
+                  <div className="relative w-full h-32 bg-white/50">
+                    {service.config_json?.image_url && (
+                      <Image src={service.config_json.image_url} alt={service.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/20" />
+                    <div className="absolute bottom-3 left-3 right-3">
+                      <span className="text-white font-black text-sm drop-shadow-md leading-tight line-clamp-2">{service.title}</span>
                     </div>
                   </div>
-                </button>
-              );
-            })}
-          </div>
+                  <div className="p-3 flex items-center justify-between bg-white border-t border-border/40">
+                    <Link href={`/dashboard/mes-services/${service.id}`} className="text-xs font-bold text-primary hover:underline bg-primary/10 px-3 py-1.5 rounded-lg">Ouvrir</Link>
+                    <div className="flex items-center gap-3">
+                      <Link href={`/dashboard/studio?edit=${service.id}`} className="text-xs font-bold text-muted-foreground hover:text-foreground">Éditer</Link>
+                      <button 
+                        onClick={() => handleDeleteService(service.id)} 
+                        className="text-xs font-bold text-red-500 hover:text-red-700"
+                      >
+                        Supprimer
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

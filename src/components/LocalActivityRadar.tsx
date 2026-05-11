@@ -44,12 +44,15 @@ export function getPoiTheme(metaCategoryOrPoi: any) {
 
 export default function LocalActivityRadar({ 
   insee, lat, lon, isMaximized = false, 
-  defaultRadius = 15, onRadiusChange, onLaunchItinerary, user
+  defaultRadius = 15, onRadiusChange, onLaunchItinerary, user,
+  lockedCategories, hideFilters
 }: { 
   insee: string, lat: string, lon: string, isMaximized?: boolean, 
   defaultRadius?: number, onRadiusChange?: (r: number) => void,
   onLaunchItinerary?: (destination: string) => void,
-  user?: any
+  user?: any,
+  lockedCategories?: string[],
+  hideFilters?: boolean
 }) {
   const [pois, setPois] = useState<POI[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -134,7 +137,7 @@ export default function LocalActivityRadar({
     const fetchPOIs = async () => {
       setIsLoading(true);
       try {
-        const catQuery = debouncedFilters.categories.length > 0 ? encodeURIComponent(debouncedFilters.categories.join(',')) : 'none';
+        const catQuery = lockedCategories ? encodeURIComponent(lockedCategories.join(',')) : (debouncedFilters.categories.length > 0 ? encodeURIComponent(debouncedFilters.categories.join(',')) : 'none');
         let url = `/api/poi?lat=${lat}&lon=${lon}&insee=${insee}&radius=${debouncedRadius}&categories=${catQuery}`;
         if (debouncedFilters.startDate) url += `&start=${debouncedFilters.startDate}`;
         if (debouncedFilters.endDate) url += `&end=${debouncedFilters.endDate}`;
@@ -255,11 +258,12 @@ export default function LocalActivityRadar({
             </p>
         )}
 
-        <div className="flex flex-col gap-3 pt-3 border-t border-neutral-200/60">
-            <div className="flex items-center gap-2 mb-1">
-                <Filter className="w-4 h-4 text-orange-500" />
-                <span className="text-xs font-bold uppercase tracking-wider text-neutral-700">Filtrer par Catégorie</span>
-            </div>
+        {!hideFilters && (
+          <div className="flex flex-col gap-3 pt-3 border-t border-neutral-200/60">
+              <div className="flex items-center gap-2 mb-1">
+                  <Filter className="w-4 h-4 text-orange-500" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-neutral-700">Filtrer par Catégorie</span>
+              </div>
             <div className="flex flex-wrap gap-2">
                 {ALL_META_CATEGORIES.map(cat => {
                     const isActive = categories.includes(cat);
@@ -339,6 +343,7 @@ export default function LocalActivityRadar({
                 </div>
             )}
         </div>
+        )}
       </div>
 
       <div className="flex-1 overflow-hidden p-4 relative bg-card flex flex-col">
