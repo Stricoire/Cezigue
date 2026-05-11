@@ -46,8 +46,16 @@ export async function POST(request: Request) {
         newScore = parseFloat((totalScore / newComments.length).toFixed(2));
     }
 
-    // UPSERT
-    const { error: upsertError } = await supabase
+    // Create a service_role client to bypass RLS for UPSERT since only the server is allowed to write
+    const { createClient: createSupabaseClient } = require('@supabase/supabase-js');
+    const supabaseAdmin = createSupabaseClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        { auth: { persistSession: false } }
+    );
+
+    // UPSERT with admin client
+    const { error: upsertError } = await supabaseAdmin
         .from('cezigue_enrichments')
         .upsert({
             poi_id: poi_id,

@@ -34,9 +34,9 @@ export async function GET(request: Request) {
 
     // Filtres complexes "Vibe" ou "Fraîcheur" sur la colonne type
     if (mode === 'vibe') {
-        query = query.in('type', ['bar', 'pub', 'nightclub', 'restaurant', 'cafe', 'fast_food']);
+        query = query.in('type', ['bar', 'pub', 'nightclub', 'boite_de_nuit', 'restaurant', 'cafe', 'fast_food', 'restauration_rapide']);
     } else if (mode === 'freshness') {
-        query = query.in('type', ['park', 'garden', 'fountain', 'drinking_water', 'water', 'swimming_pool', 'wood', 'forest', 'pitch', 'recreation_ground', 'nature_reserve']);
+        query = query.in('type', ['park', 'parc', 'garden', 'jardin', 'fountain', 'drinking_water', 'water', 'swimming_pool', 'piscine', 'wood', 'forest', 'foret', 'pitch', 'terrain_de_sport', 'recreation_ground', 'nature_reserve']);
     }
 
     const { data: heatmapPois, error } = await query;
@@ -52,10 +52,10 @@ export async function GET(request: Request) {
         let intensity = 1.0;
         
         if (mode === 'vibe') {
-             if (poi.type === 'nightclub') intensity = 2.0;
+             if (poi.type === 'nightclub' || poi.type === 'boite_de_nuit') intensity = 2.0;
              if (poi.type === 'pub' || poi.type === 'bar') intensity = 1.5;
         } else if (mode === 'freshness') {
-             if (poi.type === 'park' || poi.type === 'forest') intensity = 2.0;
+             if (poi.type === 'park' || poi.type === 'parc' || poi.type === 'forest' || poi.type === 'foret') intensity = 2.0;
         }
 
         return [parseFloat(poi.lat), parseFloat(poi.lon), intensity];
