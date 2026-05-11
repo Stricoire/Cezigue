@@ -2,7 +2,7 @@ const { createClient } = require('@supabase/supabase-js');
 const fs = require('fs');
 const dotenv = require('dotenv');
 
-const envConfig = dotenv.parse(fs.readFileSync('.env.local'));
+const envConfig = dotenv.parse(fs.readFileSync('../.github.env'));
 const supabaseUrl = envConfig.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = envConfig.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -26,8 +26,8 @@ async function checkIngestion() {
 
   // Check POI unified
   const { data: pois, error: errPoi } = await supabase
-    .from('poi_unified')
-    .select('id, category, source, updated_at')
+    .from('unified_pois')
+    .select('id, categories, source, updated_at')
     .gte('updated_at', isoYesterday);
 
   console.log("=== INGESTION REPORT ===");
