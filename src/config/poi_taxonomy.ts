@@ -26,6 +26,7 @@ export const POI_TAXONOMY: Record<string, POIMetaCategory> = {
     theme: { color: "orange", bg: "bg-orange-100", text: "text-orange-700", border: "border-orange-300", bgSolid: "bg-orange-500", ring: "ring-orange-200" },
     types: {
       "restaurant": { label: "Restaurant", icon: "🍽️" },
+      "michelin_restaurant": { label: "Restaurant Michelin", icon: "⭐" },
       "michelin_starred": { label: "Restaurant étoilé Michelin", icon: "⭐️" },
       "michelin_bib": { label: "Restaurant (Bib Gourmand)", icon: "😋" },
       "relais_routier": { label: "Relais Routier", icon: "🚚" },

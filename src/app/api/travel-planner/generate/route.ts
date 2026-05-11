@@ -224,7 +224,7 @@ export async function POST(request: Request) {
 
     // 3. Scan des POIs sur le corridor
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
     const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false } });
 
     // Traduction des tastes en Meta-Catégories
