@@ -226,7 +226,7 @@ export function getTaxonomyInfo(poiType: string, dbCategories: string[] = []) {
   let foundMetaKey = "Autres Services";
   let foundSubKey = "other";
   
-  // 1. Chercher d'abord la correspondance exacte du type (ex: 'bakery')
+  // 1. Chercher d'abord la correspondance exacte du type (ex: 'boulangerie')
   for (const [metaKey, metaData] of Object.entries(POI_TAXONOMY)) {
     if (metaData.types[poiType]) {
       return {
