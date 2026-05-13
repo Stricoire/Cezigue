@@ -19,6 +19,8 @@ export default function ServicesPage() {
   const supabase = createClient();
   const [user, setUser] = useState<any>(null);
   const [locationData, setLocationData] = useState<any>(null);
+  const [isPremium, setIsPremium] = useState<boolean>(false);
+  const [showPremiumModal, setShowPremiumModal] = useState<boolean>(false);
   
   // Dashboard Widget State
   const [activeWidgets, setActiveWidgets] = useState<string[]>(['fuel']);
@@ -52,6 +54,7 @@ export default function ServicesPage() {
       if (user) {
         const { data: prefs } = await supabase.from('user_preferences').select('*').eq('id', user.id).single();
         if (prefs) {
+          setIsPremium(prefs.subscription_status === 'ACTIVE');
           if (prefs.active_widgets) setActiveWidgets(prefs.active_widgets);
           if (prefs.default_radius) setDefaultRadius(prefs.default_radius);
           
@@ -154,9 +157,9 @@ export default function ServicesPage() {
          <h1 className="text-2xl font-black tracking-tight text-zinc-900 hidden md:block">Mobilité Péri-rurale</h1>
          {user && (
            <div className="flex items-center gap-3">
-             <Link href="/dashboard/studio" className="text-sm font-bold text-white bg-primary hover:bg-primary/90 px-4 py-2 rounded-full transition-colors flex items-center gap-2 shadow-sm">
+             <button onClick={() => isPremium ? router.push('/dashboard/studio') : setShowPremiumModal(true)} className="text-sm font-bold text-white bg-primary hover:bg-primary/90 px-4 py-2 rounded-full transition-colors flex items-center gap-2 shadow-sm">
                ✨ Studio IA
-             </Link>
+             </button>
              <Link href="/dashboard/mes-services" className="text-sm font-bold text-primary bg-primary/10 hover:bg-primary/20 px-4 py-2 rounded-full transition-colors flex items-center gap-2">
                Mes Services
              </Link>
@@ -247,7 +250,7 @@ export default function ServicesPage() {
                 <div className="col-span-full py-12 text-center text-muted-foreground">
                   Vous n'avez pas encore créé de micro-services.
                   <br/>
-                  <Link href="/dashboard/studio" className="text-primary hover:underline font-bold mt-2 inline-block">Créer mon premier service</Link>
+                  <button onClick={() => isPremium ? router.push('/dashboard/studio') : setShowPremiumModal(true)} className="text-primary hover:underline font-bold mt-2 inline-block">Créer mon premier service</button>
                 </div>
               )}
               {customServices.map(service => (
@@ -264,7 +267,7 @@ export default function ServicesPage() {
                   <div className="p-3 flex items-center justify-between bg-white border-t border-border/40">
                     <Link href={`/dashboard/mes-services/${service.id}`} className="text-xs font-bold text-primary hover:underline bg-primary/10 px-3 py-1.5 rounded-lg">Ouvrir</Link>
                     <div className="flex items-center gap-3">
-                      <Link href={`/dashboard/studio?edit=${service.id}`} className="text-xs font-bold text-muted-foreground hover:text-foreground">Éditer</Link>
+                      <button onClick={() => isPremium ? router.push(`/dashboard/studio?edit=${service.id}`) : setShowPremiumModal(true)} className="text-xs font-bold text-muted-foreground hover:text-foreground">Éditer</button>
                       <button 
                         onClick={() => handleDeleteService(service.id)} 
                         className="text-xs font-bold text-red-500 hover:text-red-700"
@@ -365,6 +368,29 @@ export default function ServicesPage() {
                />
             </WidgetWrapper>
 
+          </div>
+        </div>
+      )}
+
+      {/* Premium Modal */}
+      {showPremiumModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 text-center animate-in fade-in zoom-in duration-200">
+            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+              ✨
+            </div>
+            <h3 className="text-xl font-black text-zinc-900 mb-2">Passez au niveau supérieur</h3>
+            <p className="text-muted-foreground mb-6">
+              Pour pouvoir créer vous-même vos propres micro-services et avoir accès à notre capacité d'IA, vous devez prendre un compte premium. Ces capacités requièrent de la puissance de calcul et induisent des coûts de token, c'est pour cela que ce service est payant.
+            </p>
+            <div className="flex flex-col gap-3">
+              <Link href="/dashboard/billing" className="w-full font-bold text-white bg-primary hover:bg-primary/90 px-4 py-3 rounded-xl transition-colors">
+                Voir les possibilités d'abonnement
+              </Link>
+              <button onClick={() => setShowPremiumModal(false)} className="w-full font-bold text-zinc-500 hover:bg-zinc-100 px-4 py-3 rounded-xl transition-colors">
+                Plus tard
+              </button>
+            </div>
           </div>
         </div>
       )}
