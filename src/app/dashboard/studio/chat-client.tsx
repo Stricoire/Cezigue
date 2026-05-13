@@ -15,9 +15,21 @@ const LIBRARY_IMAGES = [
 export function ChatClient({ initialEditService }: { initialEditService?: any }) {
   const [prompt, setPrompt] = useState('');
   
-  // Si on est en mode édition, on affiche un message d'accueil spécifique et on précharge la config
-  const initialMessages = initialEditService 
-    ? [{
+  let initialMessages: any[] = [];
+  if (initialEditService) {
+    if (initialEditService.conversation_history && initialEditService.conversation_history.length > 0) {
+      initialMessages = [...initialEditService.conversation_history];
+      initialMessages.push({
+        role: 'assistant',
+        content: `Vous modifiez actuellement le service "${initialEditService.title}". Dites-moi ce que vous souhaitez changer (ex: "ajoute les restaurants au filtre" ou "agrandis le rayon à 10km").`,
+        draftConfig: {
+          title: initialEditService.title,
+          description: initialEditService.description,
+          config_json: initialEditService.config_json
+        }
+      });
+    } else {
+      initialMessages = [{
         role: 'assistant' as const,
         content: `Vous modifiez actuellement le service "${initialEditService.title}". Dites-moi ce que vous souhaitez changer (ex: "ajoute les restaurants au filtre" ou "agrandis le rayon à 10km").`,
         draftConfig: {
@@ -25,11 +37,14 @@ export function ChatClient({ initialEditService }: { initialEditService?: any })
           description: initialEditService.description,
           config_json: initialEditService.config_json
         }
-      }]
-    : [{
-        role: 'assistant' as const,
-        content: 'Bonjour ! Décrivez-moi le service métier que vous souhaitez créer. Par exemple : "Une carte qui affiche les bornes de recharge électrique à moins de 20km".'
       }];
+    }
+  } else {
+    initialMessages = [{
+      role: 'assistant' as const,
+      content: 'Bonjour ! Décrivez-moi le service métier que vous souhaitez créer. Par exemple : "Une carte qui affiche les bornes de recharge électrique à moins de 20km".'
+    }];
+  }
 
   const [messages, setMessages] = useState<{role: 'user'|'assistant', content: string, serviceId?: string, draftConfig?: any}[]>(initialMessages);
   const [loading, setLoading] = useState(false);
@@ -116,7 +131,7 @@ export function ChatClient({ initialEditService }: { initialEditService?: any })
       const res = await fetch('/api/ai/chat-to-build', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'PUBLISH', draftConfig, imageUrl, editServiceId })
+        body: JSON.stringify({ action: 'PUBLISH', draftConfig, imageUrl, editServiceId, history: messages })
       });
 
       const data = await res.json();

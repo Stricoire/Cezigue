@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Layers, Plus, ExternalLink, ArrowRight } from "lucide-react";
+import { Layers, Plus, ExternalLink, ArrowRight, ArrowLeft } from "lucide-react";
 
 export default async function MyServicesPage() {
   const supabase = await createClient();
@@ -21,6 +21,9 @@ export default async function MyServicesPage() {
     <div className="max-w-6xl mx-auto py-12 px-4">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12 gap-4">
         <div>
+          <Link href="/services" className="bg-muted hover:bg-border text-foreground px-4 py-2 rounded-xl text-sm font-black flex items-center gap-2 w-fit transition-all shadow-sm border border-border/50 mb-6">
+            <ArrowLeft className="w-5 h-5" /> Retour à l'Espace Personnel
+          </Link>
           <h1 className="text-3xl font-black text-foreground">Mes Micro-services</h1>
           <p className="text-muted-foreground mt-2">Vos vues et API sur-mesure générées par l'IA.</p>
         </div>
@@ -44,14 +47,25 @@ export default async function MyServicesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service: any) => (
             <div key={service.id} className="bg-card rounded-2xl p-6 border border-border/40 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
-              <div className="flex items-start justify-between mb-4">
-                <div className="p-3 bg-primary/10 text-primary rounded-xl">
-                  <Layers className="w-6 h-6" />
+              {service.config_json?.image_url ? (
+                <div className="w-full h-32 mb-4 rounded-xl overflow-hidden relative border border-border/50">
+                   <img src={service.config_json.image_url} alt={service.title} className="w-full h-full object-cover" />
+                   <div className="absolute top-2 right-2">
+                     <span className="text-[10px] font-bold text-muted-foreground px-2 py-1 bg-background/80 backdrop-blur rounded-full">
+                       {service.config_json.type === 'map' ? 'Carte' : 'Liste'}
+                     </span>
+                   </div>
                 </div>
-                <span className="text-xs font-bold text-muted-foreground px-3 py-1 bg-muted rounded-full">
-                  {service.config_json.type === 'map' ? 'Carte' : 'Liste'}
-                </span>
-              </div>
+              ) : (
+                <div className="flex items-start justify-between mb-4">
+                  <div className="p-3 bg-primary/10 text-primary rounded-xl">
+                    <Layers className="w-6 h-6" />
+                  </div>
+                  <span className="text-xs font-bold text-muted-foreground px-3 py-1 bg-muted rounded-full">
+                    {service.config_json.type === 'map' ? 'Carte' : 'Liste'}
+                  </span>
+                </div>
+              )}
               
               <h3 className="text-lg font-black text-foreground mb-2">{service.title}</h3>
               <p className="text-sm text-muted-foreground flex-1">{service.description}</p>

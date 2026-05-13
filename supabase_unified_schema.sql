@@ -76,14 +76,16 @@ BEGIN
   AND (
     p_categories IS NULL 
     OR cardinality(p_categories) = 0 
-    OR categories && p_categories -- intersection: si un des tags demandés est dans l'array du POI
+    OR categories && p_categories
+    OR type = ANY(p_categories)
   )
   AND (
     p_search_query IS NULL
     OR p_search_query = ''
-    OR title ILIKE '%' || p_search_query || '%'
-    OR description ILIKE '%' || p_search_query || '%'
-    OR metadata::text ILIKE '%' || p_search_query || '%'
+    OR title ~* p_search_query
+    OR description ~* p_search_query
+    OR type ~* p_search_query
+    OR metadata::text ~* p_search_query
   )
   ORDER BY location <-> ST_SetSRID(ST_MakePoint(p_lon, p_lat), 4326)::geography
   LIMIT 2500;

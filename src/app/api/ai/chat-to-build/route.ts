@@ -45,7 +45,8 @@ Soit quand la configuration est prête à être enregistrée :
 }
 
 Règles pour config_json.categories: utilise des tags simples (ex: "restaurant", "parking", "hospital", "pharmacy").
-Règles pour config_json.search_keyword: utilise ce champ OPTIONNEL uniquement si l'utilisateur demande un critère très spécifique non couvert par les catégories de base (ex: "PMR", "bébé", "wifi", "terrasse"). La base de données cherchera ce mot-clé dans toutes les métadonnées du lieu.
+Règles pour config_json.search_keyword: utilise ce champ OPTIONNEL uniquement si l'utilisateur demande un critère spécifique non couvert par les catégories de base (ex: "PMR", "bébé", "wifi", "terrasse"). 
+CRITIQUE : Tu dois IMPÉRATIVEMENT élargir le champ lexical au maximum ! Trouve tous les synonymes et termes administratifs possibles pour la demande de l'utilisateur et sépare-les par une barre verticale '|' (ex: "PMR|handicapé|adapté|fauteuil roulant"). La base de données utilisera cette chaîne comme expression régulière. Si tu as un doute sur le champ lexical, demande d'abord à l'utilisateur de valider tes mots-clés avant de générer la configuration.
 Règles pour config_json.radius: Le rayon DOIT être en mètres (ex: 5000 pour 5km).
 
 NE RENVOIE QUE LE JSON.
@@ -80,7 +81,8 @@ export async function POST(request: Request) {
             .update({
                 title: draftConfig.title,
                 description: draftConfig.description,
-                config_json: finalConfigJson
+                config_json: finalConfigJson,
+                conversation_history: history || []
             })
             .eq('id', editServiceId)
             .eq('user_id', user.id) // Ensure security
@@ -93,7 +95,8 @@ export async function POST(request: Request) {
                 user_id: user.id,
                 title: draftConfig.title,
                 description: draftConfig.description,
-                config_json: finalConfigJson
+                config_json: finalConfigJson,
+                conversation_history: history || []
             })
             .select()
             .single();
@@ -160,8 +163,14 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, response: parsedResponse });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("API Error:", error);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    let errorMessage = "Erreur serveur";
+    if (error.status === 429 || (error.message && error.message.includes('429'))) {
+      errorMessage = "Quota d'utilisation IA dépassé (limite journalière ou requêtes trop fréquentes). Veuillez patienter quelques minutes ou configurer une clé API payante.";
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

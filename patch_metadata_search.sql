@@ -23,9 +23,9 @@ BEGIN
   AND (
     p_search_query IS NULL
     OR p_search_query = ''
-    OR title ILIKE '%' || p_search_query || '%'
-    OR description ILIKE '%' || p_search_query || '%'
-    OR metadata::text ILIKE '%' || p_search_query || '%'
+    OR title ~* p_search_query
+    OR description ~* p_search_query
+    OR metadata::text ~* p_search_query
   )
   ORDER BY location <-> ST_SetSRID(ST_MakePoint(p_lon, p_lat), 4326)::geography
   LIMIT 2500;

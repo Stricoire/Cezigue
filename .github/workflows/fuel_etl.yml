@@ -19,15 +19,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install dependencies
-        run: |
-          # On installe ts-node globalement pour exécuter le script
-          npm install -g ts-node typescript @supabase/supabase-js
+        run: npm ci
 
       - name: Run ETL Script
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: ts-node scripts/etl_history.ts
+        run: npx --yes tsx scripts/etl_history.ts

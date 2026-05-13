@@ -42,10 +42,10 @@ export default async function ServiceViewerPage({
       {/* Header */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8 border-b border-border/40 pb-8">
         <div className="flex flex-col gap-4">
-          <Link href="/dashboard/mes-services" className="text-sm font-bold text-muted-foreground hover:text-foreground flex items-center gap-2 w-fit transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Retour aux services
+          <Link href="/services" className="bg-muted hover:bg-border text-foreground px-5 py-2.5 rounded-xl text-sm font-black flex items-center gap-2 w-fit transition-all shadow-sm border border-border/50">
+            <ArrowLeft className="w-5 h-5" /> Retour à mon Espace Personnel
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 mt-2">
             <div className="w-10 h-10 rounded-xl bg-foreground text-background flex items-center justify-center shrink-0">
               <Activity className="w-5 h-5" />
             </div>

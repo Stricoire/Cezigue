@@ -52,7 +52,7 @@ const TASTE_MAPPING: Record<string, string[]> = {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { startLocation, destination, viaWaypoint, vehicleType, fuelType, tankCapacity, initialFuelLevel, tastes, tripType, searchKeyword } = body;
+    const { startLocation, destination, viaWaypoint, vehicleType, fuelType, tankCapacity, initialFuelLevel, tastes, tripType, searchKeyword, lockedCategories } = body;
 
     if (!startLocation || !destination) {
       return NextResponse.json({ error: "Départ et destination requis." }, { status: 400 });
@@ -216,9 +216,11 @@ export async function POST(request: Request) {
        }
     });
 
-    // On ajoute toujours le point d'arrivée si pas déjà trop proche
+    // On ajoute toujours le point d'arrivée si pas déjà trop proche (on réduit à 1km pour être sûr de couvrir la destination)
     const finalPoint = coordinates[coordinates.length - 1];
-    if (waypoints.length > 0 && getDistance(waypoints[waypoints.length-1].lat, waypoints[waypoints.length-1].lon, finalPoint[0], finalPoint[1]) > 10) {
+    if (waypoints.length > 0 && getDistance(waypoints[waypoints.length-1].lat, waypoints[waypoints.length-1].lon, finalPoint[0], finalPoint[1]) > 1) {
+       waypoints.push({ lat: finalPoint[0], lon: finalPoint[1] });
+    } else if (waypoints.length === 0) {
        waypoints.push({ lat: finalPoint[0], lon: finalPoint[1] });
     }
 
@@ -226,22 +228,6 @@ export async function POST(request: Request) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
     const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false } });
-
-    // Traduction des tastes en Meta-Catégories
-    let selectedMetaCategories: string[] = [];
-    
-    if (tastes && Array.isArray(tastes) && tastes.length > 0) {
-       tastes.forEach((t: string) => {
-          if (TASTE_MAPPING[t]) {
-             selectedMetaCategories.push(...TASTE_MAPPING[t]);
-          }
-       });
-    } else {
-       selectedMetaCategories = Object.keys(POI_TAXONOMY);
-    }
-    
-    // Remove duplicates
-    selectedMetaCategories = Array.from(new Set(selectedMetaCategories));
 
     // Mapping des Méta-catégories UI vers les catégories brutes de la base de données (OSM/Michelin)
     const metaToDbMap: Record<string, string[]> = {
@@ -255,14 +241,48 @@ export async function POST(request: Request) {
         "Autres Services": ["Service", "Autre"]
     };
 
+    let selectedMetaCategories: string[] = [];
     let dbCategoriesFilter: string[] = [];
-    if (selectedMetaCategories.length > 0) {
-        selectedMetaCategories.forEach((cat: string) => {
-            if (metaToDbMap[cat]) {
-                dbCategoriesFilter.push(...metaToDbMap[cat]);
-            }
+    
+    if (lockedCategories && lockedCategories.length > 0) {
+        lockedCategories.forEach((cat: string) => {
+             const lowerCat = cat.toLowerCase();
+             if (metaToDbMap[cat]) {
+                 dbCategoriesFilter.push(...metaToDbMap[cat]);
+             } else {
+                 dbCategoriesFilter.push(lowerCat.toUpperCase());
+             }
+             
+             // GESTION DES ALIAS : Si l'IA sort un mot générique, on le mappe sur le langage OpenData
+             if (lowerCat === 'parking' || lowerCat === 'stationnement') {
+                 dbCategoriesFilter.push('parking', 'PARKING', 'STATIONNEMENT', 'stationnement', 'Parking');
+             } else if (lowerCat === 'velo' || lowerCat === 'vélo') {
+                 dbCategoriesFilter.push('velo', 'VELO', 'VÉLO', 'vélo', 'STATION_VELO', 'STATION_VÉLO');
+             } else if (lowerCat === 'irve') {
+                 dbCategoriesFilter.push('irve', 'IRVE', 'BORNE_RECHARGE');
+             }
         });
-        dbCategoriesFilter = Array.from(new Set(dbCategoriesFilter)); // Dédoublonnage
+        dbCategoriesFilter = Array.from(new Set(dbCategoriesFilter));
+    } else {
+        if (tastes && Array.isArray(tastes) && tastes.length > 0) {
+           tastes.forEach((t: string) => {
+              if (TASTE_MAPPING[t]) {
+                 selectedMetaCategories.push(...TASTE_MAPPING[t]);
+              }
+           });
+        } else {
+           selectedMetaCategories = Object.keys(POI_TAXONOMY);
+        }
+        selectedMetaCategories = Array.from(new Set(selectedMetaCategories));
+
+        if (selectedMetaCategories.length > 0) {
+            selectedMetaCategories.forEach((cat: string) => {
+                if (metaToDbMap[cat]) {
+                    dbCategoriesFilter.push(...metaToDbMap[cat]);
+                }
+            });
+            dbCategoriesFilter = Array.from(new Set(dbCategoriesFilter));
+        }
     }
 
     const allPois = new Map<string, any>(); // Utilisation d'une Map pour dédupliquer par ID
@@ -285,8 +305,14 @@ export async function POST(request: Request) {
                const rawType = poi.type ? poi.type.toLowerCase().split(';')[0] : '';
                const taxonomyInfo = getTaxonomyInfo(rawType, poi.categories || []);
                
-               // On ne garde que les POIs qui matchent les meta-categories demandées
-               if (selectedMetaCategories.includes(taxonomyInfo.metaKey)) {
+               let keep = false;
+               if (lockedCategories && lockedCategories.length > 0) {
+                   keep = true; // DB already filtered via p_categories
+               } else if (selectedMetaCategories.includes(taxonomyInfo.metaKey)) {
+                   keep = true;
+               }
+
+               if (keep) {
                    // On injecte les infos traduites
                    poi.translatedType = taxonomyInfo.subData.label;
                    poi.metaCategory = taxonomyInfo.metaKey;

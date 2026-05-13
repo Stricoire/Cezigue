@@ -19,7 +19,7 @@ function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
 }
 
-export default function TravelPlanner({ user, locationData, maximized, defaultSearchKeyword }: { user?: any, locationData?: any, maximized?: boolean, defaultSearchKeyword?: string }) {
+export default function TravelPlanner({ user, locationData, maximized, defaultSearchKeyword, lockedCategories }: { user?: any, locationData?: any, maximized?: boolean, defaultSearchKeyword?: string, lockedCategories?: string[] }) {
   const supabase = createClient();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -115,7 +115,8 @@ export default function TravelPlanner({ user, locationData, maximized, defaultSe
           dates,
           tripType,
           tastes,
-          searchKeyword: defaultSearchKeyword
+          searchKeyword: defaultSearchKeyword,
+          lockedCategories
         })
       });
 
@@ -422,7 +423,7 @@ export default function TravelPlanner({ user, locationData, maximized, defaultSe
                    <div className="absolute left-[24px] top-12 bottom-12 w-0.5 bg-neutral-200 z-0"></div>
      
                    {/* Point de départ */}
-                   <div className="relative z-20 pl-14">
+                   <div className="relative z-30 pl-14">
                      <div className="absolute left-[-2px] top-3 w-4 h-4 rounded-full border-4 border-blue-500 bg-white"></div>
                      <label className="block text-sm font-semibold text-neutral-700 mb-2">Point de départ</label>
                      {startLocation ? (
@@ -563,28 +564,40 @@ export default function TravelPlanner({ user, locationData, maximized, defaultSe
                    <Compass className="w-5 h-5 text-emerald-500 mr-2" /> 3. Vos centres d'intérêt
                  </h3>
                  
-                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 items-start">
-                   {tasteOptions.map(taste => {
-                     const isSelected = tastes.includes(taste.id);
-
-                     return (
-                       <div key={taste.id} className="flex flex-col gap-2">
-                          <button
-                            onClick={() => toggleTaste(taste.id)}
-                            className={`flex flex-col items-center justify-center p-3 rounded-2xl border-2 transition-all duration-200 relative overflow-hidden h-full min-h-[90px] ${
-                              isSelected ? taste.color + ' border-current shadow-sm' : 'bg-white border-neutral-100 text-neutral-400 hover:border-neutral-200 hover:bg-neutral-50'
-                            }`}
-                          >
-                            {isSelected && <CheckCircle2 className="w-4 h-4 absolute top-2 right-2 opacity-80" />}
-                            {taste.icon}
-                            <span className={`text-xs font-bold text-center ${isSelected ? '' : 'text-neutral-600'}`}>
-                              {taste.label}
-                            </span>
-                          </button>
-                       </div>
-                     )
-                   })}
-                 </div>
+                 {defaultSearchKeyword ? (
+                    <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-5 flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                         <Compass className="w-6 h-6 text-emerald-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-emerald-900">Filtre d'intelligence artificielle exclusif activé</p>
+                        <p className="text-xs text-emerald-700 mt-1">Ce micro-service est configuré pour rechercher uniquement le profil : <strong className="px-2 py-0.5 bg-emerald-200 rounded text-emerald-900 ml-1">{defaultSearchKeyword}</strong></p>
+                      </div>
+                    </div>
+                 ) : (
+                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 items-start">
+                     {tasteOptions.map(taste => {
+                       const isSelected = tastes.includes(taste.id);
+  
+                       return (
+                         <div key={taste.id} className="flex flex-col gap-2">
+                            <button
+                              onClick={() => toggleTaste(taste.id)}
+                              className={`flex flex-col items-center justify-center p-3 rounded-2xl border-2 transition-all duration-200 relative overflow-hidden h-full min-h-[90px] ${
+                                isSelected ? taste.color + ' border-current shadow-sm' : 'bg-white border-neutral-100 text-neutral-400 hover:border-neutral-200 hover:bg-neutral-50'
+                              }`}
+                            >
+                              {isSelected && <CheckCircle2 className="w-4 h-4 absolute top-2 right-2 opacity-80" />}
+                              {taste.icon}
+                              <span className={`text-xs font-bold text-center ${isSelected ? '' : 'text-neutral-600'}`}>
+                                {taste.label}
+                              </span>
+                            </button>
+                         </div>
+                       );
+                     })}
+                   </div>
+                 )}
                </section>
      
                {/* Section 4: Contraintes */}

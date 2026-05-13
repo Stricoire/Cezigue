@@ -34,7 +34,7 @@ export function ServiceRenderer({ service }: { service: any }) {
              </div>
           )}
         </div>
-        <TravelPlanner defaultSearchKeyword={service.config_json.search_keyword} />
+        <TravelPlanner defaultSearchKeyword={service.config_json.search_keyword} lockedCategories={service.config_json.categories} />
       </div>
     );
   }
@@ -53,9 +53,14 @@ export function ServiceRenderer({ service }: { service: any }) {
   if (!hasContext) {
     return (
       <div className="flex flex-col gap-6 max-w-2xl mx-auto mt-10 w-full px-4">
-         <div className="text-center space-y-2 mb-4">
-            <h1 className="text-3xl font-black text-foreground">{service.title}</h1>
-            <p className="text-muted-foreground">{service.description}</p>
+         <div className="text-center space-y-4 mb-8">
+            {service.config_json?.image_url && (
+               <div className="w-full max-w-lg mx-auto h-48 md:h-64 rounded-3xl overflow-hidden shadow-sm relative mb-6 border border-border">
+                  <img src={service.config_json.image_url} alt={service.title} className="w-full h-full object-cover" />
+               </div>
+            )}
+            <h1 className="text-3xl md:text-4xl font-black text-foreground">{service.title}</h1>
+            <p className="text-muted-foreground text-lg">{service.description}</p>
          </div>
 
          <div className="bg-card p-6 md:p-8 rounded-3xl border border-border shadow-xl relative overflow-hidden">
